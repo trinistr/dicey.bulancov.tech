@@ -1,0 +1,444 @@
+:root {
+    /* https://paletton.com/#uid=4120N0kymrngCCipKvQFvkQQEcW */
+    --primary-lighter: #ffe29d;
+    --primary-light: #ffc53d;
+    --primary: #da9900;
+    --primary-dark: #996b00;
+    --primary-darker: #3d2b00;
+
+    --secondary-lighter: #b487d3;
+    --secondary-light: #7c32ae;
+    --secondary: #5a0892;
+    --secondary-dark: #3f0467;
+    --secondary-darker: #190029;
+
+    --tertiary-lighter: #83d4b3;
+    --tertiary-light: #2ab17a;
+    --tertiary: #009459;
+    --tertiary-dark: #00683e;
+    --tertiary-darker: #002a19;
+
+    --complement-lighter: #8d9bd4;
+    --complement-light: #3a52b1;
+    --complement: #112a94;
+    --complement-dark: #081b68;
+    --complement-darker: #010929;
+
+    --standout-color: var(--tertiary);
+    --standout-alt-color: var(--secondary);
+
+    --font-color: var(--complement-darker);
+    --font-emph-color: var(--secondary-darker);
+    --background-color: var(--primary-lighter);
+    --background-special-color: hsl(from var(--background-color) h s 90%);
+    --font-alt-color: var(--primary-lighter);
+    --font-alt-emph-color: var(--secondary-lighter);
+    --background-alt-color: var(--primary-light);
+
+    --link-color: var(--tertiary-light);
+    --link-background: var(--secondary-dark);
+    --link-active-color: var(--tertiary-lighter);
+    --link-active-background: var(--secondary);
+
+    --border-color: var(--complement-light);
+    --shadow-color: hsl(from var(--complement-darker) h s l / 0.2);
+    --border-standout-color: var(--tertiary);
+
+    --surface: #ffffff;
+    --border: #dee2e6;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --font-color: var(--primary-lighter);
+        --font-emph-color: var(--secondary-lighter);
+        --background-color: var(--complement-darker);
+        --background-special-color: hsl(from var(--background-color) h s 10%);
+        --background-alt-color: var(--primary-dark);
+
+        --shadow-color: hsl(from var(--complement-darker) h s 5% / 1);
+
+        --surface: #1a1a2a;
+        --border: #343456;
+    }
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    transition: all 0.2s;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--font-color);
+    background-color: var(--background-color);
+    padding: 1rem;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: var(--surface);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+h1 {
+    color: var(--standout-color);
+    margin-bottom: 0.5rem;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2rem;
+}
+
+@media (max-width: 768px) {
+    .container {
+        grid-template-columns: 1fr;
+    }
+}
+
+.dice-selection {
+    background-color: var(--surface);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+.common-dice {
+    margin-bottom: 2rem;
+}
+
+.common-dice h2 {
+    color: var(--standout-color);
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+}
+
+.dice-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 1rem;
+}
+
+.dice-btn {
+    background: var(--background-color);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    padding: 0.75rem;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.dice-btn:hover {
+    background: var(--standout-color);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px var(--shadow-color);
+}
+
+.dice-btn:active {
+    transform: translateY(2px);
+    background: hsl(from var(--standout-color) h s 60%);
+}
+
+.dice-btn svg {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 0.5rem;
+}
+
+.dice-btn span {
+    font-weight: bold;
+    color: var(--font-color);
+}
+
+.custom-dice {
+    margin-bottom: 2rem;
+}
+
+.custom-dice h2 {
+    color: var(--standout-color);
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+}
+
+.custom-dice .input-group {
+    display: flex;
+    margin-bottom: 1rem;
+}
+
+.custom-dice .input-group input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 2px solid var(--border-color);
+    border-inline-end: none;
+    border-radius: 8px 0 0 8px;
+    font-size: 1rem;
+    background: var(--surface);
+    color: var(--font-color);
+}
+
+.custom-dice .input-group input:user-invalid {
+    border-color: red;
+    &+ button {
+        border-color: red;
+    }
+}
+
+.custom-dice .input-group button {
+    padding: 0.75rem 1rem;
+    background: var(--standout-color);
+    color: var(--font-color);
+    border: 2px solid var(--standout-color);
+    border-inline-start: none;
+    border-radius: 0 8px 8px 0;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.custom-dice .input-group button:hover {
+    background: var(--standout-alt-color);
+    border-color: var(--standout-alt-color);
+    color: white;
+}
+
+.custom-dice .input-group button:active {
+    background: hsl(from var(--standout-alt-color) h s 60%);
+}
+
+.selected-dice {
+    margin-top: 2rem;
+}
+
+.selected-dice h2 {
+    color: var(--standout-color);
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+}
+
+.dice-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    min-height: calc(1rem + 30px);
+}
+
+.dice-list:empty::before {
+    content: "None yet!";
+    display: block;
+    width: 100%;
+}
+
+.dice-chip {
+    background: var(--standout-alt-color);
+    color: var(--font-alt-color);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: bold;
+}
+
+.dice-chip button {
+    border: none;
+    background: var(--background-color);
+    color: var(--font-color);
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    padding: 0;
+    margin-right: -10px;
+}
+
+.dice-chip button:hover {
+    background: var(--standout-color);
+    color: var(--standout-alt-color);
+}
+.dice-chip button:active {
+    background: hsl(from var(--standout-color) h s 60%);
+    color: var(--standout-alt-color);
+}
+
+/* .dice-chip:has(button:hover) {
+    background: var(--standout-color);
+    color: var(--font-alt-color);
+} */
+/* .dice-chip:has(button:active) {
+    background: hsl(from var(--standout-color) h s 60%);
+} */
+
+.results {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.roll-results,
+.distribution-results {
+    background-color: var(--surface);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+.roll-results h2,
+.distribution-results h2 {
+    color: var(--standout-color);
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+}
+
+.roll-output {
+    background: var(--background-special-color);
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    text-align: center;
+    font-weight: bold;
+    color: var(--font-color);
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.roll-output:empty::before {
+    content: "No dice";
+    display: block;
+    width: 100%;
+}
+
+.die-roll-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.die-description {
+    margin: 0 0.5rem;
+    background: var(--standout-alt-color);
+    color: var(--font-alt-color);
+    border-radius: 8px 8px 0 0;
+    font-size: 0.7rem;
+}
+
+.die-roll {
+    display: block;
+    padding: 0.5rem 1rem;
+    background: var(--standout-color);
+    color: var(--font-color);
+    border-radius: 8px;
+    font-weight: bold;
+    min-width: calc(1rem + 1lh);
+    cursor: pointer;
+}
+
+.die-roll:hover {
+    background: var(--standout-alt-color);
+    color: var(--font-alt-color);
+}
+
+.die-roll:active {
+    background: hsl(from var(--standout-alt-color) h s 60%);
+}
+.die-roll-container:has(.die-roll:active) {
+    transform: translateY(2px);
+}
+.die-roll-container:has(.die-roll:active) .die-description {
+    background: hsl(from var(--standout-alt-color) h s 60%);
+}
+
+.roll-total {
+    font-size: 2rem;
+    padding: 0.5rem 1rem;
+    margin-left: 1rem;
+    background: var(--standout-alt-color);
+    color: var(--font-alt-color);
+    border-radius: 12px;
+    text-align: center;
+    min-width: calc(1rem + 1lh);
+}
+
+.reroll-btn {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    background: var(--standout-color);
+    color: var(--font-color);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.reroll-btn:hover {
+    background: var(--standout-alt-color);
+    color: white;
+}
+
+.reroll-btn:active {
+    transform: translateY(2px);
+    background: hsl(from var(--standout-alt-color) h s 60%);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+th,
+td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+th {
+    background-color: var(--background-alt-color);
+    color: var(--font-color);
+    font-weight: bold;
+}
+
+tr:hover {
+    background-color: var(--background-special-color);
+}
+
+.probability-bar-container {
+    width: 100%;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    height: 20px;
+}
+
+.probability-bar {
+    height: 100%;
+    width: attr(data-ratio type(<percentage>), 0%);
+    background-color: var(--background-alt-color);
+    border-radius: 4px;
+    transition: width 0.5s ease;
+}
