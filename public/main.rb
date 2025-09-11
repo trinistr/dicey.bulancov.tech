@@ -257,6 +257,6 @@ updater = ->(*) {
 }
 DiceSelection.add_observer(updater, :call)
 
-# --- Initial update
+# --- All done, hide loader
 
-# DiceSelection.add_die("d6")
+DOCUMENT.getElementById("loader").hidePopover()

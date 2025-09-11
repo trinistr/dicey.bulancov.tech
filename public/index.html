@@ -22,6 +22,14 @@
         <p>Dice probability calculator and roller</p>
     </header>
 
+    <div class="loader" id="loader" popover="manual">
+        <div class="loader-spinner">&nbsp;</div>
+    </div>
+    <script>
+        const loader = document.getElementById("loader");
+        loader.showPopover();
+    </script>
+
     <div class="container">
         <div class="dice-selection">
             <div class="common-dice">
