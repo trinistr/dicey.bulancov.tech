@@ -115,7 +115,7 @@
                 <label for="custom-dice-input">Add a custom die:</label>
                 <div class="input-group">
                     <input type="text" placeholder="e.g. d3 or 2,3,5,7,11" id="custom-dice-input"
-                        pattern="\s*d?([1-9][0-9]*|\(?(-?[0-9]+(\.[0-9]+)?,)*-?[0-9]+(\.[0-9]+)?,?\)?)\s*"
+                        pattern="\s*d?([1-9][0-9]*|\(?(-?[0-9]+,)*-?[0-9]+,?\)?)\s*"
                         enterkeyhint="done" oninput="(e) => e.target.checkValidity()">
                     <button id="custom-dice-button">Add</button>
                 </div>
