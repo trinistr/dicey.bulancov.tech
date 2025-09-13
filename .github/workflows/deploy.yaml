@@ -14,7 +14,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   build:
-    if: ${{ github.repository == 'trinistr/dicey.bulancov.pro' }}
+    if: ${{ github.repository_owner == 'trinistr' }}
     runs-on: ubuntu-latest
     env:
       BUNDLE_ONLY: "default documentation"
@@ -36,13 +36,10 @@ jobs:
           ruby-version: "3.3"
           bundler-cache: true
       - name: Pack Dicey
-        run: |
-          cd dicey
-          bin/pack_files lib/dicey.rb lib/dicey/cli/blender.rb
-          cd -
-          cp dicey/pkg/dicey.pack.rb public/dicey.pack.rb
-      - name: Remove Dicey
-        run: rm -rfv dicey
+        working-directory: ./dicey
+        run: bin/pack_files lib/dicey.rb lib/dicey/cli/blender.rb
+      - name: Copy packed Dicey to deploy folder
+        run: cp dicey/pkg/dicey.pack.rb public/dicey.pack.rb
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
