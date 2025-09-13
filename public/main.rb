@@ -101,6 +101,8 @@ module DiceSelection
     def determine_die_name(value)
       if value.start_with?("d")
         value
+      elsif value.start_with?("D")
+        value.downcase
       elsif value.match?(/\A[1-9][0-9]*\z/)
         "d#{value}"
       else
