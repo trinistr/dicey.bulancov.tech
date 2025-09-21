@@ -28,7 +28,7 @@ jobs:
         with:
           persist-credentials: false
           repository: "trinistr/dicey"
-          ref: "fd22c1b314178dee6fbff726ed1919d8459fc9e4"
+          ref: "9163ac7e90df4ab78ddcad71ed4ce48ac2fe2e06"
           path: "dicey"
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1

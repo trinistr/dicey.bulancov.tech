@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dicey — Dice probability calculator and roller</title>
+    <title>Dicey — Dice distribution calculator and roller</title>
     <link rel="stylesheet" href="main.css">
     <link rel="icon" type="image/svg+xml" href="d12.svg">
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/@ruby/3.4-wasm-wasi@2.7.1/dist/ruby+stdlib.wasm"
@@ -20,16 +20,15 @@
 
     <header>
         <h1>Dicey</h1>
-        <p>Dice probability calculator and roller</p>
+        <p>Dice distribution calculator and roller</p>
     </header>
 
     <div class="loader" id="loader" popover="manual">
         <div class="loader-spinner">&nbsp;</div>
+        <script>
+            document.getElementById("loader").showPopover();
+        </script>
     </div>
-    <script>
-        const loader = document.getElementById("loader");
-        loader.showPopover();
-    </script>
 
     <div class="container">
         <div class="dice-selection">
@@ -115,8 +114,8 @@
                 <h2>Custom dice</h2>
                 <label for="custom-dice-input">Add a custom die:</label>
                 <div class="input-group">
-                    <input type="text" placeholder="e.g. d3 or 2,3,5,7,11" id="custom-dice-input"
-                        pattern="\s*[Dd]?([1-9][0-9]*|\(?(-?[0-9]+,)*-?[0-9]+,?\)?)\s*"
+                        <input type="text" placeholder="e.g. d3, 4-8, or 2,3,5,7,11" id="custom-dice-input"
+                            pattern="\s*[Dd]?([1-9][0-9]*|\(?-?[1-9][0-9]*(-|..|...|–|—|…)-?[1-9][0-9]*\)?|\(?(-?[0-9]+,)*-?[0-9]+,?\)?)\s*"
                         enterkeyhint="done" oninput="(e) => e.target.checkValidity()">
                     <button id="custom-dice-button">Add</button>
                 </div>

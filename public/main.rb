@@ -49,6 +49,8 @@ module RAX
 end
 
 module DiceSelection
+  FOUNDRY = Dicey::DieFoundry.new
+
   class << self
     include Observable
 
@@ -71,8 +73,7 @@ module DiceSelection
     end
 
     def dice
-      foundry = Dicey::DieFoundry.new
-      selected_dice_list[:children].to_a.map { |chip| foundry.call(chip[:dataset][:die].to_s) }
+      selected_dice_list[:children].to_a.map { |chip| FOUNDRY.call(chip[:dataset][:die].to_s) }
     end
 
     private
@@ -99,18 +100,51 @@ module DiceSelection
     end
 
     def determine_die_name(value)
-      if value.start_with?("d")
-        value
-      elsif value.start_with?("D")
-        value.downcase
-      elsif value.match?(/\A[1-9][0-9]*\z/)
-        "d#{value}"
-      else
-        value
-          .delete_suffix(",")
-          .then { "(#{_1}" unless _1.start_with?("(") }
-          .then { "#{_1})" unless _1.end_with?(")") }
+      FOUNDRY.call(value).to_s
+    end
+  end
+end
+
+module RollController
+  class << self
+    def update_roll(dice)
+      roll_output.replaceChildren and return if dice.empty?
+
+      rolls = dice.map { [_1, _1.roll] }
+      display_roll(rolls)
+    end
+
+    private
+
+    def display_roll(rolls)
+      results = rolls.map { |(die, roll)| build_die_roll(die, roll) }
+      results.each_with_index do |node, index|
+        node.addEventListener("click") do |e|
+          rolls[index] = [rolls[index].first, rolls[index].first.roll]
+          display_roll(rolls)
+        end
       end
+      results << build_roll_total(rolls.sum(&:last))
+      roll_output.replaceChildren(*results)
+    end
+
+    def roll_output
+      DOCUMENT.getElementById("roll-output")
+    end
+
+    def build_die_roll(die, roll)
+      description = die.to_s
+
+      RAX.("button", class: "die-roll-container") do
+        [
+          RAX.("div", class: "die-description", "data-die": description) { description },
+          RAX.("div", class: "die-roll") { roll }
+        ]
+      end
+    end
+
+    def build_roll_total(total)
+      RAX.("div", class: "roll-total") { total }
     end
   end
 end
@@ -172,54 +206,6 @@ module DistributionController
       RAX.("tr") do
         RAX.("td", colSpan: "5") { "Here be probabilities" }
       end
-    end
-  end
-end
-
-module RollController
-  class << self
-    def update_roll(dice)
-      roll_output.replaceChildren and return if dice.empty?
-
-      rolls = dice.map { [_1, _1.roll] }
-      display_roll(rolls)
-    end
-
-    private
-
-    def display_roll(rolls)
-      results = rolls.map { |(die, roll)| build_die_roll(die, roll) }
-      results.each_with_index do |node, index|
-        node.addEventListener("click") do |e|
-          rolls[index] = [rolls[index].first, rolls[index].first.roll]
-          display_roll(rolls)
-        end
-      end
-      results << build_roll_total(rolls.sum(&:last))
-      roll_output.replaceChildren(*results)
-    end
-
-    def roll_output
-      DOCUMENT.getElementById("roll-output")
-    end
-
-    def build_die_roll(die, roll)
-      description = die.is_a?(Dicey::RegularDie) ? "d#{die.sides_num}" : "(#{die.sides_list.join(",")})"
-
-      RAX.("div", class: "die-roll-container") do
-        [
-          RAX.("div", class: "die-description", "data-die": description) { description },
-          RAX.("div", class: "die-roll", "aria-role": "button") { roll }
-        ]
-      end
-    end
-
-    def reroll_listener_for_result(rolls)
-      
-    end
-
-    def build_roll_total(total)
-      RAX.("div", class: "roll-total") { total }
     end
   end
 end
