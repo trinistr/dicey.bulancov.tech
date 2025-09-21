@@ -222,8 +222,9 @@ end
 
 # Custom dice
 custom_dice_input = DOCUMENT.getElementById("custom-dice-input")
-custom_dice_button = DOCUMENT.getElementById("custom-dice-button")
-custom_dice_button.addEventListener("click") do |e|
+custom_dice_form = DOCUMENT.getElementById("custom-dice-form")
+custom_dice_form.addEventListener("submit") do |e|
+  e.preventDefault
   next unless custom_dice_input[:validity][:valid] == JS::True
 
   value = custom_dice_input[:value]

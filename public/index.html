@@ -112,13 +112,15 @@
 
             <div class="custom-dice">
                 <h2>Custom dice</h2>
+                <form action="javascript:void(0);" id="custom-dice-form">
                 <label for="custom-dice-input">Add a custom die:</label>
                 <div class="input-group">
-                        <input type="text" placeholder="e.g. d3, 4-8, or 2,3,5,7,11" id="custom-dice-input"
+                        <input type="text" placeholder="e.g. d3, -4..4, or 2,3,11,2" id="custom-dice-input"
                             pattern="\s*[Dd]?([1-9][0-9]*|\(?-?[1-9][0-9]*(-|..|...|–|—|…)-?[1-9][0-9]*\)?|\(?(-?[0-9]+,)*-?[0-9]+,?\)?)\s*"
                         enterkeyhint="done" oninput="(e) => e.target.checkValidity()">
                     <button id="custom-dice-button">Add</button>
                 </div>
+                </form>
             </div>
 
             <div class="selected-dice">
