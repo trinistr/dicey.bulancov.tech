@@ -184,7 +184,7 @@ module DistributionController
     end
 
     def build_table_rows(data)
-      return [empty_table_row] if data.empty?
+      return [] if data.empty?
 
       data.map do |(outcome, weight, probability, percentage, ratio)|
         probability_string = "#{probability.numerator}​/​#{probability.denominator}"
@@ -200,12 +200,6 @@ module DistributionController
             end,
           ]
         end
-      end
-    end
-
-    def empty_table_row
-      RAX.("tr") do
-        RAX.("td", colSpan: "5") { "Here be probabilities" }
       end
     end
   end

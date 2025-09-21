@@ -62,6 +62,9 @@
         --surface-color: #1a1a2a;
         --border-soft-color: hsl(from var(--border-color) h 15% 40%);
     }
+
+    /* Reserve space for scrollbars (they will appear, trust). */
+    scrollbar-gutter: stable both-edges;
 }
 
 * {
@@ -97,11 +100,11 @@ h2 {
 
 button {
     border: none;
+    line-height: 1.6;
     cursor: pointer;
 }
 
 .standout-button {
-    border-inline-start: none;
     border-radius: 0.5rem;
     padding-block: 0.75rem;
     padding-inline: 1rem;
@@ -122,8 +125,8 @@ button {
 .loader {
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    block-size: 100%;
+    inline-size: 100%;
     border: none;
     align-items: center;
     justify-content: center;
@@ -134,8 +137,8 @@ button {
     }
 
     .loader-spinner {
-        height: 10rem;
-        width: 10rem;
+        block-size: 10rem;
+        inline-size: 10rem;
         border-left: 0.2rem solid var(--border-standout-color);
         border-top: 0.2rem solid var(--border-standout-color);
         border-radius: 50%;
@@ -159,29 +162,47 @@ button {
     background-color: var(--surface-color);
 }
 
-header {
-    max-width: 1200px;
-    margin-inline: auto;
-    margin-block-end: 2rem;
-    text-align: center;
-}
-
 .container {
-    max-width: 1200px;
+    max-inline-size: 1200px;
     margin-inline: auto;
     display: grid;
     gap: 2rem;
+    grid-template-areas:
+        "header header"
+        "dice-selection roll-results"
+        "dice-selection distribution-results";
     grid-template-columns: 1fr 2fr;
+    grid-template-rows: auto auto 1fr;
 
     @media (max-width: 768px) {
+        grid-template-areas:
+            "header"
+            "dice-selection"
+            "roll-results"
+            "distribution-results";
         grid-template-columns: 1fr;
+        grid-template-rows: none;
     }
 }
 
+header {
+    grid-area: header;
+    text-align: center;
+}
+
 .dice-selection {
-    .common-dice {
+    block-size: min-content;
+    grid-area: dice-selection;
+
+    &> div {
         margin-block-end: 2rem;
 
+        &:last-child {
+            margin-block-end: 0;
+        }
+    }
+
+    .common-dice {
         .dice-grid {
             display: grid;
             gap: 1rem;
@@ -198,7 +219,6 @@ header {
             align-items: center;
             justify-content: center;
             background: var(--background-color);
-            line-height: 1.6;
             font-size: 1rem;
 
             &:hover {
@@ -214,8 +234,8 @@ header {
             }
 
             svg {
-                width: 2lh;
-                height: 2lh;
+                block-size: 2lh;
+                inline-size: 2lh;
 
                 * {
                     stroke-width: 4px;
@@ -239,8 +259,6 @@ header {
     }
 
     .custom-dice {
-        margin-block-end: 2rem;
-
         h2 {
             margin-block-end: 1rem;
             color: var(--standout-color);
@@ -254,7 +272,8 @@ header {
             input {
                 border: 0.15rem solid var(--border-color);
                 border-inline-end: none;
-                border-radius: 0.5rem 0 0 0.5rem;
+                border-start-start-radius: 0.5rem;
+                border-end-start-radius: 0.5rem;
                 padding: 0.75rem;
                 flex: 1;
                 background: var(--surface-color);
@@ -273,7 +292,9 @@ header {
             button {
                 border: 0.15rem solid var(--standout-color);
                 border-inline-start: none;
-                border-radius: 0 0.5rem 0.5rem 0;
+                border-radius: 0;
+                border-start-end-radius: 0.5rem;
+                border-end-end-radius: 0.5rem;
 
                 &:hover {
                     border-color: var(--standout-alt-color);
@@ -287,23 +308,22 @@ header {
     }
 
     .selected-dice {
-        margin-block-start: 2rem;
-
         .dice-list {
-            min-height: 3rem;
+            min-block-size: 3rem;
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
 
             &:empty::before {
-                width: 100%;
+                inline-size: 100%;
                 display: block;
-                content: "None yet!";
+                content: "None yet";
             }
 
             .dice-chip {
                 border-radius: 2rem;
-                padding: 0.5rem 1rem;
+                padding-block: 0.5rem;
+                padding-inline: 1rem;
                 display: flex;
                 gap: 0.5rem;
                 align-items: center;
@@ -312,14 +332,12 @@ header {
                 font-weight: bold;
 
                 .remove-button {
-                    width: 2rem;
-                    height: 2rem;
+                    block-size: 2rem;
+                    inline-size: 2rem;
                     margin-inline-end: -0.5rem;
                     border-radius: 50%;
                     padding: 0;
-                    display: flex;
                     align-items: center;
-                    justify-content: center;
                     background: var(--background-color);
                     color: var(--font-color);
                     font-weight: bold;
@@ -346,9 +364,12 @@ header {
 }
 
 .roll-results {
+    block-size: min-content;
+    grid-area: roll-results;
+
     .roll-output {
-        /* Height of .roll-total + padding */
-        min-height: calc(3rem + 1lh);
+        /* block-size of .roll-total + padding */
+        min-block-size: calc(3rem + 1lh);
         margin-block-end: 1rem;
         border-radius: 0.5rem;
         padding: 1rem;
@@ -364,28 +385,23 @@ header {
         font-weight: bold;
 
         &:empty::before {
-            width: 100%;
+            inline-size: 100%;
             display: block;
             font-size: 1.5rem;
-            content: "⬅️ No dice";
-
-            @media (max-width: 768px) {
-                content: "⬆️ No dice";
-            }
+            content: "No dice";
         }
 
         .die-roll-container {
-            /* Min width allows for two digits, working with most practical dice. */
-            min-width: calc(2rem + 2ch);
+            /* Min inline-size allows for two digits, working with most practical dice. */
+            min-inline-size: calc(2rem + 2ch);
             padding: 0;
             display: flex;
             gap: 0;
             flex-direction: column;
-            line-height: 1.6;
             font-size: 1.5rem;
 
             .die-description {
-                border-bottom: 0.1rem solid var(--background-special-color);
+                border-block-end: 0.1rem solid var(--background-special-color);
                 padding-inline: 0.25rem;
                 font-size: 0.5em;
             }
@@ -412,10 +428,11 @@ header {
         }
 
         .roll-total {
-            min-width: calc(2rem + 2ch);
-            margin-left: 1rem;
+            min-inline-size: calc(2rem + 2ch);
+            margin-inline-start: 1rem;
             border-radius: calc(1.2rem + 1lh) / calc(1rem + 1lh);
-            padding: 0.5rem 1rem;
+            padding-block: 0.5rem;
+            padding-inline: 1rem;
             background: var(--standout-alt-color);
             color: var(--font-alt-color);
             text-align: center;
@@ -424,7 +441,7 @@ header {
     }
     
     .reroll-button {
-        width: 100%;
+        inline-size: 100%;
         display: block;
         font-size: 1.2rem;
 
@@ -440,8 +457,25 @@ header {
 }
 
 .distribution-results {
+    block-size: min-content;
+    grid-area: distribution-results;
+    
+    #empty-results-table {
+        display: none;
+    }
+
+    &:has(tbody:empty) {
+        thead {
+            display: none;
+        }
+
+        #empty-results-table {
+            display: initial;
+        }
+    }
+
     table {
-        width: 100%;
+        inline-size: 100%;
         margin-top: 1rem;
         border-collapse: collapse;
     }
@@ -491,14 +525,14 @@ header {
     }
 
     .probability-bar-container {
-        width: 100%;
-        height: 0.8lh;
+        inline-size: 100%;
+        block-size: 0.8lh;
         border-radius: 0.25rem;
         background: var(--border-soft-color);
 
         .probability-bar {
-            height: 100%;
-            width: attr(data-ratio type(<percentage>), 0%);
+            block-size: 100%;
+            inline-size: attr(data-ratio type(<percentage>), 0%);
             border-radius: 0.25rem;
             background-color: var(--primary-light);
 

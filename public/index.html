@@ -18,11 +18,6 @@
         <p>JavaScript is required to use this calculator. Sad but true.</p>
     </noscript>
 
-    <header class="surface">
-        <h1>Dicey</h1>
-        <p>Dice distribution calculator and roller</p>
-    </header>
-
     <div class="loader" id="loader" popover="manual">
         <div class="loader-spinner">&nbsp;</div>
         <script>
@@ -31,6 +26,11 @@
     </div>
 
     <div class="container">
+        <header class="surface">
+            <h1>Dicey</h1>
+            <p>Dice distribution calculator and roller</p>
+        </header>
+
         <div class="dice-selection surface">
             <div class="common-dice">
                 <h2>Common dice</h2>
@@ -113,30 +113,28 @@
             </div>
         </div>
 
-        <div class="results">
-            <div class="roll-results surface">
-                <h2>Roll results</h2>
-                <div class="roll-output" id="roll-output"></div>
-                <button class="standout-button reroll-button" id="reroll-button">Reroll</button>
-            </div>
+        <div class="roll-results surface">
+            <h2>Roll results</h2>
+            <div class="roll-output" id="roll-output"></div>
+            <button class="standout-button reroll-button" id="reroll-button">Reroll</button>
+        </div>
 
-            <div class="distribution-results surface">
-                <h2>Probability distribution</h2>
-                <table id="results-table">
-                    <thead>
-                        <tr>
-                            <th><span title="Total value of all dice, also known as outcome">Value</span></th>
-                            <th><span title="Number of distinct rolls that can produce this outcome">Weight</span></th>
-                            <th><span title="Probability of this outcome">P</span></th>
-                            <th><span title="Probability of this outcome relative to probability of most likely outcome">P/Mode</span></th>
-                        </tr>
-                    </thead>
-                    <tbody id="results-table-body">
-                        <tr>
-                            <td colspan="5">Here be probabilities</td>
-                        </tr>
-                    </tbody>
-                </table>
+        <div class="distribution-results surface">
+            <h2>Probability distribution</h2>
+            <table id="results-table">
+                <thead>
+                    <tr>
+                        <th><span title="Total value of all dice, also known as outcome">Value</span></th>
+                        <th><span title="Number of distinct rolls that can produce this outcome">Weight</span></th>
+                        <th><span title="Probability of this outcome">P</span></th>
+                        <th><span title="Probability of this outcome relative to probability of most likely outcome">P/Mode</span></th>
+                    </tr>
+                </thead>
+                <tbody id="results-table-body"></tbody>
+            </table>
+            <div id="empty-results-table">
+                <p><i>Here be probabilities!</i></p>
+                <p>But currently they aren't.</p>
             </div>
         </div>
     </div>
