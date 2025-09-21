@@ -88,7 +88,7 @@ module DiceSelection
         RAX.("div", class: "dice-chip", "data-die": name) do
           [
             name,
-            RAX.("button", "aria-label": "Remove") { "×" },
+            RAX.("button", class: "remove-button", "aria-label": "Remove") { "×" },
           ]
         end
       add_remove_listener_to_chip(chip)
@@ -135,7 +135,7 @@ module RollController
     def build_die_roll(die, roll)
       description = die.to_s
 
-      RAX.("button", class: "die-roll-container") do
+      RAX.("button", class: "standout-button die-roll-container") do
         [
           RAX.("div", class: "die-description", "data-die": description) { description },
           RAX.("div", class: "die-roll") { roll }
@@ -187,11 +187,12 @@ module DistributionController
       return [empty_table_row] if data.empty?
 
       data.map do |(outcome, weight, probability, percentage, ratio)|
+        probability_string = "#{probability.numerator}​/​#{probability.denominator}"
         RAX.("tr") do
           [
             RAX.("td") { outcome },
             RAX.("td") { weight },
-            RAX.("td") { "#{probability} (#{percentage}%)" },
+            RAX.("td") { "#{probability_string} (#{percentage}%)" },
             RAX.("td") do
               RAX.("div", class: "probability-bar-container") do
                 RAX.("div", class: "probability-bar", "data-ratio": "#{ratio}%")

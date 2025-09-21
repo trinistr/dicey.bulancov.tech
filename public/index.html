@@ -18,7 +18,7 @@
         <p>JavaScript is required to use this calculator. Sad but true.</p>
     </noscript>
 
-    <header>
+    <header class="surface">
         <h1>Dicey</h1>
         <p>Dice distribution calculator and roller</p>
     </header>
@@ -31,81 +31,65 @@
     </div>
 
     <div class="container">
-        <div class="dice-selection">
+        <div class="dice-selection surface">
             <div class="common-dice">
                 <h2>Common dice</h2>
                 <div class="dice-grid">
-                    <button class="dice-btn" data-die="d4" id="die-d4">
+                    <button class="dice-button" data-die="D4" id="die-d4">
                         <svg viewBox="-10 -10 120 120">
-                            <polygon points="50,10 100,90 30,100 0,85"
-                                fill="var(--primary-light)" stroke="var(--primary-dark)" stroke-width="4" />
-                            <line x1="50" y1="10" x2="30" y2="100" stroke="var(--primary-dark)" stroke-width="4" />
+                            <polygon points="50,10 100,90 30,100 0,85" />
+                            <line x1="50" y1="10" x2="30" y2="100" />
                         </svg>
-                        <span>d4</span>
+                        <span>D4</span>
                     </button>
-                    <button class="dice-btn" data-die="d6" id="die-d6">
+                    <button class="dice-button" data-die="D6" id="die-d6">
                         <svg viewBox="-10 -10 120 120">
-                            <polygon points="0,20 60,15 100,20 100,90 40,100 0,90"
-                                fill="var(--primary-light)" stroke="var(--primary-dark)" stroke-width="4" />
-                            <polyline points="0,20 40,25 100,20"
-                                fill="none" stroke="var(--primary-dark)" stroke-width="4" />
-                            <polyline points="40,25 40,100"
-                                fill="none" stroke="var(--primary-dark)" stroke-width="4" />
+                            <polygon points="0,20 60,15 100,20 100,90 40,100 0,90" />
+                            <polyline points="0,20 40,25 100,20" />
+                            <polyline points="40,25 40,100" />
                         </svg>
-                        <span>d6</span>
+                        <span>D6</span>
                     </button>
-                    <button class="dice-btn" data-die="d8" id="die-d8">
+                    <button class="dice-button" data-die="D8" id="die-d8">
                         <svg viewBox="-10 -10 120 120">
-                            <polygon points="50,0 0,50 50,100 100,55"
-                                fill="var(--primary-light)" stroke="var(--primary-dark)" stroke-width="4" />
-                            <polyline points="0,50 25,60 100,55"
-                                fill="none" stroke="var(--primary-dark)" stroke-width="4" />
-                            <polyline points="50,0 25,60 50,100"
-                                fill="none" stroke="var(--primary-dark)" stroke-width="4" />
+                            <polygon points="50,0 0,50 50,100 100,55" />
+                            <polyline points="0,50 25,60 100,55" />
+                            <polyline points="50,0 25,60 50,100" />
                         </svg>
-                        <span>d8</span>
+                        <span>D8</span>
                     </button>
-                    <button class="dice-btn" data-die="d10" id="die-d10">
+                    <button class="dice-button" data-die="D10" id="die-d10">
                         <svg viewBox="-10 -10 120 120">
-                            <polygon points="50,0 95,40 95,55 50,95 5,55 5,40"
-                                fill="var(--primary-light)" stroke="var(--primary-dark)" stroke-width="4" />
-                            <polyline points="5,55 25,45 50,60 75,45 95,55"
-                                fill="none" stroke="var(--primary-dark)" stroke-width="4" />
-                            <line x1="50" y1="0" x2="25" y2="45" stroke="var(--primary-dark)" stroke-width="4" />
-                            <line x1="50" y1="0" x2="75" y2="45" stroke="var(--primary-dark)" stroke-width="4" />
-                            <line x1="50" y1="95" x2="50" y2="60" stroke="var(--primary-dark)" stroke-width="4" />
+                            <polygon points="50,0 95,40 95,55 50,95 5,55 5,40" />
+                            <polyline points="5,55 25,45 50,60 75,45 95,55" />
+                            <line x1="50" y1="0" x2="25" y2="45" />
+                            <line x1="50" y1="0" x2="75" y2="45" />
+                            <line x1="50" y1="95" x2="50" y2="60" />
                         </svg>
-                        <span>d10</span>
+                        <span>D10</span>
                     </button>
-                    <button class="dice-btn" data-die="d12" id="die-d12">
+                    <button class="dice-button" data-die="D12" id="die-d12">
                         <svg viewBox="-10 -10 120 120">
-                            <polygon points="50,0 80,5 100,40 95,65 80,90 50,100 20,90 5,65 0,40 20,5"
-                                fill="var(--primary-light)" stroke="var(--primary-dark)" stroke-width="4" />
-                            <polyline points="5,65 25,55 50,70 75,55 95,65"
-                                fill="none" stroke="var(--primary-dark)" stroke-width="4" />
-                            <polyline points="20,5 35,15 65,15 80,5"
-                                fill="none" stroke="var(--primary-dark)" stroke-width="4" />
-                            <line x1="35" y1="15" x2="25" y2="55" stroke="var(--primary-dark)" stroke-width="4" />
-                            <line x1="65" y1="15" x2="75" y2="55" stroke="var(--primary-dark)" stroke-width="4" />
-                            <line x1="50" y1="70" x2="50" y2="100" stroke="var(--primary-dark)" stroke-width="4" />
+                            <polygon points="50,0 80,5 100,40 95,65 80,90 50,100 20,90 5,65 0,40 20,5" />
+                            <polyline points="5,65 25,55 50,70 75,55 95,65" />
+                            <polyline points="20,5 35,15 65,15 80,5" />
+                            <line x1="35" y1="15" x2="25" y2="55" />
+                            <line x1="65" y1="15" x2="75" y2="55" />
+                            <line x1="50" y1="70" x2="50" y2="100" />
                         </svg>
-                        <span>d12</span>
+                        <span>D12</span>
                     </button>
-                    <button class="dice-btn" data-die="d20" id="die-d20">
+                    <button class="dice-button" data-die="D20" id="die-d20">
                         <svg viewBox="-10 -10 120 120">
-                            <polygon points="50,0 95,20 95,75 50,100 5,75 5,20"
-                                fill="var(--primary-light)" stroke="var(--primary-dark)" stroke-width="4" />
-                            <polyline points="5,20 25,35 75,35 95,20"
-                                fill="none" stroke="var(--primary-dark)" stroke-width="4" />
-                            <polyline points="5,75 25,35 50,80 75,35 95,75"
-                                fill="none" stroke="var(--primary-dark)" stroke-width="4" />
-                            <polyline points="5,75 50,80 95,75"
-                                fill="none" stroke="var(--primary-dark)" stroke-width="4" />
-                            <line x1="50" y1="0" x2="25" y2="35" stroke="var(--primary-dark)" stroke-width="4" />
-                            <line x1="50" y1="0" x2="75" y2="35" stroke="var(--primary-dark)" stroke-width="4" />
-                            <line x1="50" y1="80" x2="50" y2="100" stroke="var(--primary-dark)" stroke-width="4" />
+                            <polygon points="50,0 95,20 95,75 50,100 5,75 5,20" />
+                            <polyline points="5,20 25,35 75,35 95,20" />
+                            <polyline points="5,75 25,35 50,80 75,35 95,75" />
+                            <polyline points="5,75 50,80 95,75" />
+                            <line x1="50" y1="0" x2="25" y2="35" />
+                            <line x1="50" y1="0" x2="75" y2="35" />
+                            <line x1="50" y1="80" x2="50" y2="100" />
                         </svg>
-                        <span>d20</span>
+                        <span>D20</span>
                     </button>
                 </div>
             </div>
@@ -113,13 +97,13 @@
             <div class="custom-dice">
                 <h2>Custom dice</h2>
                 <form action="javascript:void(0);" id="custom-dice-form">
-                <label for="custom-dice-input">Add a custom die:</label>
-                <div class="input-group">
+                    <label for="custom-dice-input">Add a custom die:</label>
+                    <div class="input-group">
                         <input type="text" placeholder="e.g. d3, -4..4, or 2,3,11,2" id="custom-dice-input"
                             pattern="\s*[Dd]?([1-9][0-9]*|\(?-?[1-9][0-9]*(-|..|...|–|—|…)-?[1-9][0-9]*\)?|\(?(-?[0-9]+,)*-?[0-9]+,?\)?)\s*"
-                        enterkeyhint="done" oninput="(e) => e.target.checkValidity()">
-                    <button id="custom-dice-button">Add</button>
-                </div>
+                            enterkeyhint="done" oninput="(e) => e.target.checkValidity()">
+                        <button class="standout-button" id="custom-dice-button">Add</button>
+                    </div>
                 </form>
             </div>
 
@@ -130,13 +114,13 @@
         </div>
 
         <div class="results">
-            <div class="roll-results">
+            <div class="roll-results surface">
                 <h2>Roll results</h2>
                 <div class="roll-output" id="roll-output"></div>
-                <button class="reroll-btn" id="reroll-button">Reroll</button>
+                <button class="standout-button reroll-button" id="reroll-button">Reroll</button>
             </div>
 
-            <div class="distribution-results">
+            <div class="distribution-results surface">
                 <h2>Probability distribution</h2>
                 <table id="results-table">
                     <thead>
