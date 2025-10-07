@@ -107,60 +107,83 @@ end
 
 module RollController
   class << self
-    def update_roll(dice)
+    def replace_roll(dice)
       roll_output.replaceChildren and return if dice.empty?
 
-      rolls = dice.map { [_1, _1.roll] }
-      display_roll(rolls)
+      dice.each(&:roll)
+      roll_output.replaceChildren(*build_full_roll(dice))
+      set_total(dice.sum(&:current))
+    end
+
+    def reroll(dice)
+      return if no_dice_selected?
+
+      rolls = dice.map(&:roll)
+      rolls.each_with_index { |roll, index| set_roll_at(index, roll) }
+      set_total(rolls.sum)
+    end
+
+    def reroll_die(dice, index)
+      return if no_dice_selected?
+
+      roll = dice[index].roll
+      set_roll_at(index, roll)
+      set_total(dice.sum(&:current))
     end
 
     private
-
-    def display_roll(rolls)
-      results = rolls.map { |(die, roll)| build_die_roll(die, roll) }
-      results.each_with_index do |node, index|
-        node.addEventListener("click") do |e|
-          rolls[index] = [rolls[index].first, rolls[index].first.roll]
-          display_roll(rolls)
-        end
-      end
-      results << build_roll_total(rolls.sum(&:last))
-      roll_output.replaceChildren(*results)
-    end
 
     def roll_output
       DOCUMENT.getElementById("roll-output")
     end
 
-    def build_die_roll(die, roll)
-      description = die.to_s
+    def no_dice_selected?
+      roll_output[:children][:length].to_i.zero?
+    end
 
+    def build_full_roll(dice)
+      results = dice.map { |die| build_die_roll(die.to_s, die.current) }
+      results.each_with_index do |node, index|
+        node.addEventListener("click") { reroll_die(dice, index) }
+      end
+      results << build_roll_total
+      results
+    end
+
+    def build_die_roll(die, roll)
       RAX.("button", class: "standout-button die-roll-container") do
         [
-          RAX.("div", class: "die-description", "data-die": description) { description },
+          RAX.("div", class: "die-description", "data-die": die) { die },
           RAX.("div", class: "die-roll") { roll }
         ]
       end
     end
 
-    def build_roll_total(total)
-      RAX.("div", class: "roll-total") { total }
+    def build_roll_total
+      RAX.("div", id: "roll-total", class: "roll-total")
+    end
+
+    def set_roll_at(index, roll)
+      roll_output[:children][index][:children][1][:textContent] = roll
+    end
+
+    def set_total(total)
+      node = roll_output[:children].namedItem("roll-total")
+      node[:textContent] = total
+      node[:classList].toggle("just-rolled", true)
+      JS.global[:setTimeout].apply(-> { node[:classList].toggle("just-rolled", false) }, 100)
     end
   end
 end
 
 module DistributionCalculator
-  CALCULATORS = [
-    Dicey::SumFrequencyCalculators::KroneckerSubstitution.new,
-    Dicey::SumFrequencyCalculators::MultinomialCoefficients.new,
-    Dicey::SumFrequencyCalculators::BruteForce.new,
-  ].freeze
+  CALCULATORS = Dicey::CLI::Blender::ROLL_FREQUENCY_CALCULATORS
 
   class << self
     def calculate(dice)
       results = CALCULATORS.find { |calculator| calculator.valid_for?(dice) }.call(dice)
-      total = results.values.sum
-      results.transform_values { [_1, Rational(_1, total)] }
+      total_weight = results.values.sum
+      results.transform_values { [_1, Rational(_1, total_weight)] }
     end
   end
 end
@@ -169,10 +192,10 @@ module DistributionController
   class << self
     def update_distribution(dice)
       results = DistributionCalculator.calculate(dice)
-      max = results.values.map(&:last).max
+      max_percentage = results.values.map(&:last).max
       data = results.map do |outcome, (weight, probability)|
         percentage = (probability * 100).to_f.round(2)
-        [outcome.to_s, weight.to_s, probability, percentage, percentage / max]
+        [outcome.to_s, weight.to_s, probability, percentage, percentage / max_percentage]
       end
       results_table_body.replaceChildren(*build_table_rows(data))
     end
@@ -229,7 +252,7 @@ end
 # Reroll button
 reroll_button = DOCUMENT.getElementById("reroll-button")
 reroll_button.addEventListener("click") do |e|
-  RollController.update_roll(DiceSelection.dice)
+  RollController.reroll(DiceSelection.dice)
 end
 
 # --- Main loop (via observing dice selection)
@@ -237,10 +260,11 @@ end
 updater = ->(*) {
   dice = DiceSelection.dice
   DistributionController.update_distribution(dice)
-  RollController.update_roll(dice)
+  RollController.replace_roll(dice)
 }
 DiceSelection.add_observer(updater, :call)
 
 # --- All done, hide loader
 
 DOCUMENT.getElementById("loader").hidePopover()
+puts "Dicey v#{Dicey::VERSION}"
