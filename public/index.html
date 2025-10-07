@@ -9,8 +9,8 @@
     <link rel="icon" type="image/svg+xml" href="D12.svg">
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/@ruby/3.4-wasm-wasi@2.7.1/dist/ruby+stdlib.wasm"
         as="fetch" crossorigin="anonymous">
-    <link rel="preload" href="main.rb" as="fetch" crossorigin="anonymous">
-    <link rel="preload" href="dicey.pack.rb" as="fetch" crossorigin="anonymous">
+    <link rel="preload" href="main.rb" type="text/ruby" as="fetch" crossorigin="anonymous">
+    <link rel="preload" href="dicey.pack.rb" type="text/ruby" as="fetch" crossorigin="anonymous">
 </head>
 
 <body>
@@ -137,6 +137,13 @@
                 <p>But currently they aren't.</p>
             </div>
         </div>
+
+        <footer class="surface">
+            <nav>
+                <p><b>Dicey</b> is brought to you by <a href="https://bulancov.pro">Alexander&nbsp;Bulancov</a>.</p>
+                <p>See <a href="https://github.com/trinistr/dicey">Dicey's GitHub repository</a> for the underlying Ruby gem and <a href="https://github.com/trinistr/dicey.bulancov.tech">this webapp's repository</a> to see how it works in the browser. Suggestions are welcome!</p>
+            </nav>
+        </footer>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@ruby/3.4-wasm-wasi@2.7.1/dist/browser.script.iife.js"></script>

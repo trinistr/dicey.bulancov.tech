@@ -35,10 +35,7 @@
     --font-alt-emph-color: var(--secondary-lighter);
     --background-alt-color: var(--primary-light);
 
-    --link-color: var(--tertiary-light);
-    --link-background: var(--secondary-dark);
-    --link-active-color: var(--tertiary-lighter);
-    --link-active-background: var(--secondary);
+    --link-color: var(--complement-light);
 
     --border-color: var(--complement-light);
     --shadow-color: hsl(from var(--complement-darker) h s l / 0.2);
@@ -56,6 +53,8 @@
         --background-special-color: hsl(from var(--background-color) h s 10%);
         --background-alt-color: var(--primary-dark);
 
+        --link-color: var(--complement-lighter);
+
         --shadow-color: hsl(from var(--complement-darker) h s 5% / 1);
         --border-standout-color: var(--tertiary);
 
@@ -72,6 +71,10 @@
     margin: 0;
     padding: 0;
     transition: all 0.2s;
+
+    :focus-visible {
+        outline: 0.25em solid var(--border-color);
+    }
 }
 
 body {
@@ -98,6 +101,21 @@ h2 {
     font-size: 1.25rem;
 }
 
+a {
+    border-radius: 0.5lh;
+    text-decoration: none;
+    font-weight: bold;
+
+    &:link,
+    &:visited {
+        color: var(--link-color);
+    }
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
 button {
     border: none;
     line-height: 1.6;
@@ -112,7 +130,7 @@ button {
     color: var(--font-color);
     font-weight: bold;
 
-    &:hover {
+    &:hover, &:focus-visible {
         background: var(--standout-alt-color);
         color: var(--font-alt-color);
     }
@@ -170,7 +188,8 @@ button {
     grid-template-areas:
         "header header"
         "dice-selection roll-results"
-        "dice-selection distribution-results";
+        "dice-selection distribution-results"
+        "footer footer";
     grid-template-columns: 1fr 2fr;
     grid-template-rows: auto auto 1fr;
 
@@ -179,7 +198,8 @@ button {
             "header"
             "dice-selection"
             "roll-results"
-            "distribution-results";
+            "distribution-results"
+            "footer";
         grid-template-columns: 1fr;
         grid-template-rows: none;
     }
@@ -188,6 +208,12 @@ button {
 header {
     grid-area: header;
     text-align: center;
+}
+
+footer {
+    grid-area: footer;
+    text-align: center;
+    font-size: small;
 }
 
 .dice-selection {
@@ -221,7 +247,7 @@ header {
             background: var(--background-color);
             font-size: 1rem;
 
-            &:hover {
+            &:hover, &:focus-visible {
                 background: var(--standout-color);
                 box-shadow: 0 0.5rem 1rem var(--shadow-color);
                 transform: translateY(-0.25rem);
@@ -296,7 +322,7 @@ header {
                 border-start-end-radius: 0.5rem;
                 border-end-end-radius: 0.5rem;
 
-                &:hover {
+                &:hover, &:focus-visible {
                     border-color: var(--standout-alt-color);
                 }
 
@@ -343,7 +369,7 @@ header {
                     font-weight: bold;
                     font-size: 1.2rem;
 
-                    &:hover {
+                    &:hover, &:focus-visible {
                         background: var(--standout-color);
                         color: var(--standout-alt-color);
                     }
@@ -412,7 +438,7 @@ header {
                 display: block;
             }
             
-            &:hover {
+            &:hover, &:focus-visible {
                 box-shadow: 0 0.5rem 1rem var(--shadow-color);
                 transform: translateY(-0.25rem);
             }
