@@ -108,45 +108,48 @@ end
 module RollController
   class << self
     def replace_roll(dice)
+      self.current_dice = dice
       roll_output.replaceChildren and return if dice.empty?
 
-      dice.each(&:roll)
-      roll_output.replaceChildren(*build_full_roll(dice))
-      set_total(dice.sum(&:current))
+      current_dice.each(&:roll)
+      roll_output.replaceChildren(*build_full_roll_nodes)
+      set_total(current_dice.sum(&:current))
     end
 
-    def reroll(dice)
+    def reroll
       return if no_dice_selected?
 
-      rolls = dice.map(&:roll)
+      rolls = current_dice.map(&:roll)
       rolls.each_with_index { |roll, index| set_roll_at(index, roll) }
       set_total(rolls.sum)
     end
 
-    def reroll_die(dice, index)
+    def reroll_die(index)
       return if no_dice_selected?
 
-      roll = dice[index].roll
+      roll = current_dice[index].roll
       set_roll_at(index, roll)
-      set_total(dice.sum(&:current))
+      set_total(current_dice.sum(&:current))
     end
 
     private
+
+    attr_accessor :current_dice
 
     def roll_output
       DOCUMENT.getElementById("roll-output")
     end
 
     def no_dice_selected?
-      roll_output[:children][:length].to_i.zero?
+      !current_dice || current_dice.empty?
     end
 
-    def build_full_roll(dice)
-      results = dice.map { |die| build_die_roll(die.to_s, die.current) }
+    def build_full_roll_nodes
+      results = current_dice.map { |die| build_die_roll(die.to_s, die.current) }
       results.each_with_index do |node, index|
-        node.addEventListener("click") { reroll_die(dice, index) }
+        node.addEventListener("click") { reroll_die(index) }
       end
-      results << build_roll_total
+      results << build_roll_total_node
       results
     end
 
@@ -159,7 +162,7 @@ module RollController
       end
     end
 
-    def build_roll_total
+    def build_roll_total_node
       RAX.("div", id: "roll-total", class: "roll-total")
     end
 
@@ -252,7 +255,7 @@ end
 # Reroll button
 reroll_button = DOCUMENT.getElementById("reroll-button")
 reroll_button.addEventListener("click") do |e|
-  RollController.reroll(DiceSelection.dice)
+  RollController.reroll
 end
 
 # --- Main loop (via observing dice selection)
