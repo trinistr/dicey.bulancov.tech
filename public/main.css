@@ -63,7 +63,7 @@
     }
 
     /* Reserve space for scrollbars (they will appear, trust). */
-    scrollbar-gutter: stable both-edges;
+    scrollbar-gutter: stable;
 }
 
 * {
@@ -83,6 +83,9 @@ body {
     color: var(--font-color);
     line-height: 1.6;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    @media (max-width: 480px) {
+        padding: 0.5rem;
+    }
 }
 
 [title] {
@@ -178,6 +181,9 @@ button {
     padding: 1.5rem;
     box-shadow: 0 0.25rem 1rem var(--shadow-color);
     background-color: var(--surface-color);
+    @media (max-width: 480px) {
+        padding: 1rem;
+    }
 }
 
 .container {
@@ -202,6 +208,9 @@ button {
             "footer";
         grid-template-columns: 1fr;
         grid-template-rows: none;
+    }
+    @media (max-width: 480px) {
+        gap: 1.5rem;
     }
 }
 
@@ -228,11 +237,11 @@ footer {
         }
     }
 
-    .common-dice {
+    .dice-buttons {
         .dice-grid {
             display: grid;
             gap: 1rem;
-            grid-template-columns: repeat(auto-fill, minmax(3lh, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(3.2lh, 1fr));
         }
 
         .dice-button {
@@ -301,6 +310,10 @@ footer {
             display: flex;
 
             input {
+                @media (max-width: 768px) {
+                    /* For some reasong this is needed to make the input take less than ≈400px. */
+                    width: 100%;
+                }
                 border: 0.15rem solid var(--border-color);
                 border-inline-end: none;
                 border-start-start-radius: 0.5rem;
