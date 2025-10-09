@@ -1,6 +1,13 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+Dir["public/*.html"].each do |file|
+  puts "Minifying #{file}..."
+  content = File.read(file)
+  content.gsub!(/\s*\n\s*/, "\n")
+  File.write(file, content)
+end
+
 Dir["public/*.css"].each do |file|
   puts "Minifying #{file}..."
   content = File.read(file)

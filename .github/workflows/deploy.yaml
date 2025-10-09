@@ -54,8 +54,8 @@ jobs:
         run: cp vector_number/tmp/vector_number.pack.rb public/vector_number.pack.rb
       - name: Replace favicon
         run: mv D12-production.svg public/D12.svg
-      - name: Minify CSS
-        run: ./minify_css
+      - name: Minify HTML and CSS
+        run: ./minify_html_css
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
