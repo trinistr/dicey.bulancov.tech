@@ -37,7 +37,7 @@ jobs:
           path: "dicey"
       - name: Pack Dicey
         working-directory: ./dicey
-        run: bin/pack_files lib/dicey.rb lib/dicey/cli/blender.rb
+        run: ../pack_files lib/dicey.rb lib/dicey/cli/blender.rb
       - name: Copy packed Dicey to deploy folder
         run: cp dicey/pkg/dicey.pack.rb public/dicey.pack.rb
       - name: Checkout VectorNumber repository
@@ -49,7 +49,7 @@ jobs:
           path: "vector_number"
       - name: Pack VectorNumber
         working-directory: ./vector_number
-        run: ../dicey/bin/pack_files
+        run: ../bin/pack_files
       - name: Copy packed VectorNumber to deploy folder
         run: cp vector_number/pkg/vector_number.pack.rb public/vector_number.pack.rb
       - name: Replace favicon
