@@ -274,4 +274,4 @@ DiceSelection.add_observer(updater, :call)
 # --- All done, hide loader
 
 DOCUMENT.getElementById("loader").hidePopover()
-puts "Dicey v#{Dicey::VERSION}"
+print "Running Dicey v#{Dicey::VERSION} and VectorNumber v#{VectorNumber::VERSION}"

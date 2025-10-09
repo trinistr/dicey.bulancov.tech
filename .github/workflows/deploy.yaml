@@ -39,7 +39,7 @@ jobs:
         working-directory: ./dicey
         run: ../pack_files lib/dicey.rb lib/dicey/cli/blender.rb
       - name: Copy packed Dicey to deploy folder
-        run: cp dicey/pkg/dicey.pack.rb public/dicey.pack.rb
+        run: cp dicey/tmp/dicey.pack.rb public/dicey.pack.rb
       - name: Checkout VectorNumber repository
         uses: actions/checkout@v5
         with:
@@ -49,11 +49,18 @@ jobs:
           path: "vector_number"
       - name: Pack VectorNumber
         working-directory: ./vector_number
-        run: ../bin/pack_files
+        run: ../pack_files
       - name: Copy packed VectorNumber to deploy folder
-        run: cp vector_number/pkg/vector_number.pack.rb public/vector_number.pack.rb
+        run: cp vector_number/tmp/vector_number.pack.rb public/vector_number.pack.rb
       - name: Replace favicon
         run: mv D12-production.svg public/D12.svg
+      - name: Minify HTML/CSS/JS
+        uses: devatherock/minify-js@c4f40af50c45f8727c1a404d65f8dac342247b81 # v3.1.0
+        env:
+          INPUT_EXCLUSIONS: "main.css"
+        with:
+          directory: public
+          add_suffix: false
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact

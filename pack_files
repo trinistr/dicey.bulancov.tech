@@ -27,7 +27,7 @@ alias require_relative require_relative_with_tracking
 $roots = ARGV.empty? ? Dir["#{Dir.pwd}/lib/*.rb"] : ARGV
 $roots.map! { File.absolute_path?(_1) ? _1 : File.absolute_path(_1, Dir.pwd) }
 $roots.each do |root|
-  print "  ", root.delete_prefix(Dir.pwd).delete_prefix("/")
+  print "  ", root.delete_prefix(Dir.pwd).delete_prefix("/"), "\n  "
   root = root.delete_suffix(".rb")
   require root
   puts
@@ -43,16 +43,9 @@ require "rake"
 
 $package = +<<~RUBY
   # frozen_string_literal: true
-
-  # Refinement for this file to skip `require_relative` calls.
-  # While generally not needed, some may slip through.
   module RequireRelativeRefinement
-    refine Kernel do
-      # Do nothing as files are already included.
-      def require_relative(_path) = nil
-    end
+    refine(Kernel) { def require_relative(_) = nil }
   end
-
   using RequireRelativeRefinement
 
 RUBY
@@ -62,11 +55,12 @@ Rake::Task.define_task(package: [])
 # Helper to append files to package.
 Rake::Task.define_task(:_append_file, [:file]) do |_task, args|
   content = File.read("#{args[:file]}.rb")
-  content.gsub!(%r{^require_relative (['"])[\w./-]+\1$}, "")
+  content.gsub!(%r{^\s*require_relative (['"])[\w./-]+\1$}, "")
   content.gsub!(/\A(?># frozen_string_literal: true)?\n*+/, "")
+  content.gsub!(/^\s*(?:#.*)?\n/, "")
   content.gsub!(/\n*+\z/, "\n")
   $package << content
-  print "."
+  print "  ", args[:file].delete_prefix(Dir.pwd).delete_prefix("/"), ".rb\n"
 end
 
 # For each root, make :package depend on it, and define an appending task for it.
@@ -93,12 +87,11 @@ end
 
 require "fileutils"
 
-FileUtils.mkdir_p("pkg")
-package_file = "pkg/#{File.basename(Dir.pwd)}.pack.rb"
-print "Packing files into #{package_file}"
+FileUtils.mkdir_p("tmp")
+package_file = "tmp/#{File.basename(Dir.pwd)}.pack.rb"
+print "Packing files into #{package_file}:\n"
 Rake::Task[:package].invoke
 File.write(package_file, $package)
-puts
 
 puts "Done"
 
