@@ -11,6 +11,7 @@
         as="fetch" crossorigin="anonymous">
     <link rel="preload" href="main.rb" type="text/ruby" as="fetch" crossorigin="anonymous">
     <link rel="preload" href="dicey.pack.rb" type="text/ruby" as="fetch" crossorigin="anonymous">
+    <link rel="preload" href="vector_number.pack.rb" type="text/ruby" as="fetch" crossorigin="anonymous">
 </head>
 
 <body>
@@ -91,6 +92,24 @@
                         </svg>
                         <span>D20</span>
                     </button>
+                    <button class="dice-button" data-die="🐵,🐒" id="die-coin">
+                        <svg viewBox="-10 -10 120 120">
+                            <ellipse cx="50" cy="65" rx="50" ry="30" />
+                            <ellipse cx="50" cy="55" rx="50" ry="30" />
+                            <text x="48" y="60" rotate="15">🐵</text>
+                        </svg>
+                        <span>Coin</span>
+                    </button>
+                    <button class="dice-button" data-die="👑,♠️,♥️,♣️,♦️,⚓️" id="die-crown-anchor">
+                        <svg viewBox="-10 -10 120 120">
+                            <polygon points="0,20 60,15 100,20 100,90 40,100 0,90" />
+                            <polyline points="0,20 40,25 100,20" />
+                            <polyline points="40,25 40,100" />
+                            <text x="70" y="70" rotate="-6" lengthAdjust="spacingAndGlyphs" textLength="30">♥️</text>
+                            <text x="20" y="65" rotate="6" lengthAdjust="spacingAndGlyphs" textLength="20">♠️</text>
+                        </svg>
+                        <span>👑&⚓</span>
+                    </button>
                 </div>
             </div>
 
@@ -100,7 +119,7 @@
                     <label for="custom-dice-input">Add a custom die:</label>
                     <div class="input-group">
                         <input type="text" placeholder="e.g. d3, -4..4, or 2,3,11,2" id="custom-dice-input"
-                            pattern="\s*[Dd]?([1-9][0-9]*|\(?-?[1-9][0-9]*(-|..|...|–|—|…)-?[1-9][0-9]*\)?|\(?(-?[0-9]+,)*-?[0-9]+,?\)?)\s*"
+                            pattern="\s*[Dd]?([1-9][0-9]*|\(?-?[1-9][0-9]*(-|..|...|–|—|…)-?[1-9][0-9]*\)?|\(?-?[0-9]+((,-?[0-9]+)+|,)\)?|\(?[^'&quot;\(\),]+((,[^'&quot;\(\),]+)+|,)\)?)\s*"
                             enterkeyhint="done" oninput="(e) => e.target.checkValidity()">
                         <button class="standout-button" id="custom-dice-button">Add</button>
                     </div>

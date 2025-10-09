@@ -268,12 +268,17 @@ footer {
                     stroke: var(--primary-dark);
                 }
 
-                polygon {
+                polygon, ellipse {
                     fill: var(--primary-light);
                 }
 
                 polyline {
                     fill: none;
+                }
+
+                text {
+                    font-size: 30px;
+                    text-anchor: middle;
                 }
             }
 

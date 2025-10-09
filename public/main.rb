@@ -4,6 +4,7 @@ require "js"
 require "js/require_remote"
 
 JS::RequireRemote.instance.load("dicey.pack.rb")
+JS::RequireRemote.instance.load("vector_number.pack.rb")
 
 DOCUMENT = JS.global[:document]
 
@@ -113,7 +114,7 @@ module RollController
 
       current_dice.each(&:roll)
       roll_output.replaceChildren(*build_full_roll_nodes)
-      set_total(current_dice.sum(&:current))
+      set_total(current_dice.map(&:current))
     end
 
     def reroll
@@ -121,7 +122,7 @@ module RollController
 
       rolls = current_dice.map(&:roll)
       rolls.each_with_index { |roll, index| set_roll_at(index, roll) }
-      set_total(rolls.sum)
+      set_total(rolls)
     end
 
     def reroll_die(index)
@@ -129,7 +130,7 @@ module RollController
 
       roll = current_dice[index].roll
       set_roll_at(index, roll)
-      set_total(current_dice.sum(&:current))
+      set_total(current_dice.map(&:current))
     end
 
     private
@@ -167,12 +168,13 @@ module RollController
     end
 
     def set_roll_at(index, roll)
-      roll_output[:children][index][:children][1][:textContent] = roll
+      roll_output[:children][index][:children][1][:textContent] = roll.to_s
     end
 
-    def set_total(total)
+    def set_total(rolls)
+      total = rolls.all?(Numeric) ? rolls.sum : VectorNumber.new(rolls)
       node = roll_output[:children].namedItem("roll-total")
-      node[:textContent] = total
+      node[:textContent] = total.to_s
       node[:classList].toggle("just-rolled", true)
       JS.global[:setTimeout].apply(-> { node[:classList].toggle("just-rolled", false) }, 100)
     end
@@ -234,8 +236,10 @@ end
 # --- Set up event listeners
 
 # Common dice
-[4, 6, 8, 10, 12, 20].each do |die_value|
-  die_button = DOCUMENT.getElementById("die-d#{die_value}")
+buttons = [4, 6, 8, 10, 12, 20].map { DOCUMENT.getElementById("die-d#{_1}") }
+buttons << DOCUMENT.getElementById("die-coin")
+buttons << DOCUMENT.getElementById("die-crown-anchor")
+buttons.each do |die_button|
   die_button.addEventListener("click") do |e|
     DiceSelection.add_die(die_button[:dataset][:die])
   end
@@ -258,7 +262,7 @@ reroll_button.addEventListener("click") do |e|
   RollController.reroll
 end
 
-# --- Main loop (via observing dice selection)
+# --- Main loop of observing dice selection
 
 updater = ->(*) {
   dice = DiceSelection.dice
