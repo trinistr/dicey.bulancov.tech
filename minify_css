@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+Dir["public/*.css"].each do |file|
+  puts "Minifying #{file}..."
+  content = File.read(file)
+  content.gsub!(%r|/\*((?!\*/).)*\*/|m, "")
+  content.gsub!(/([:;])\s+/, "\\1")
+  content.gsub!(/\s*{\s*/, "{")
+  content.gsub!(/\s*\}\s*/, "}")
+  content.gsub!(/\n+/, "")
+  File.write(file, content)
+end

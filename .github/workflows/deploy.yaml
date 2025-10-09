@@ -19,15 +19,15 @@ jobs:
     env:
       BUNDLE_ONLY: "default documentation"
     steps:
-      - name: Checkout this repository
-        uses: actions/checkout@v5
-        with:
-          persist-credentials: false
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.3"
           bundler-cache: true
+      - name: Checkout this repository
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
       - name: Checkout Dicey repository
         uses: actions/checkout@v5
         with:
@@ -37,7 +37,7 @@ jobs:
           path: "dicey"
       - name: Pack Dicey
         working-directory: ./dicey
-        run: ../pack_files lib/dicey.rb lib/dicey/cli/blender.rb
+        run: ../pack_gem lib/dicey.rb lib/dicey/cli/blender.rb
       - name: Copy packed Dicey to deploy folder
         run: cp dicey/tmp/dicey.pack.rb public/dicey.pack.rb
       - name: Checkout VectorNumber repository
@@ -49,11 +49,13 @@ jobs:
           path: "vector_number"
       - name: Pack VectorNumber
         working-directory: ./vector_number
-        run: ../pack_files
+        run: ../pack_gem
       - name: Copy packed VectorNumber to deploy folder
         run: cp vector_number/tmp/vector_number.pack.rb public/vector_number.pack.rb
       - name: Replace favicon
         run: mv D12-production.svg public/D12.svg
+      - name: Minify CSS
+        run: ./minify_css
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
