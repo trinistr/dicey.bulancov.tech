@@ -32,7 +32,7 @@
             <p>Dice distribution calculator and roller with <i>exciting</i> possibilities</p>
         </header>
 
-        <div class="dice-selection surface">
+        <div class="dice-selection surface" id="dice-selection">
             <div class="dice-buttons">
                 <h2>Common dice</h2>
                 <div class="dice-grid">
@@ -60,7 +60,7 @@
                         <span>D8</span>
                     </button>
                     <button class="dice-button" data-die="D10" id="die-d10">
-                        <svg viewBox="-10 -10 120 120">
+                        <svg viewBox="-10 -10 120 120" id="die-d10-image">
                             <polygon points="50,0 95,40 95,55 50,95 5,55 5,40" />
                             <polyline points="5,55 25,45 50,60 75,45 95,55" />
                             <line x1="50" y1="0" x2="25" y2="45" />
@@ -97,6 +97,13 @@
             <div class="dice-buttons">
                 <h2>Uncommon dice</h2>
                 <div class="dice-grid">
+                    <button class="dice-button" data-die="D100" id="die-d100">
+                        <svg viewBox="-10 -10 120 120">
+                            <g transform="translate(-20, 5)"><use href="#die-d10-image" width="80" height="80" transform="rotate(-10)" /></g>
+                            <g transform="translate(50, 25)"><use href="#die-d10-image" width="80" height="80" transform="rotate(18)" /></g>
+                        </svg>
+                        <span>D100</span>
+                    </button>
                     <button class="dice-button" data-die="🐵,🐒" id="die-coin">
                         <svg viewBox="-10 -10 120 120">
                             <ellipse cx="50" cy="65" rx="50" ry="30" />

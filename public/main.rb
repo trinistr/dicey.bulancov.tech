@@ -236,9 +236,7 @@ end
 # --- Set up event listeners
 
 # Common dice
-buttons = [4, 6, 8, 10, 12, 20].map { DOCUMENT.getElementById("die-d#{_1}") }
-buttons << DOCUMENT.getElementById("die-coin")
-buttons << DOCUMENT.getElementById("die-crown-anchor")
+buttons = DOCUMENT.getElementById("dice-selection").querySelectorAll(".dice-button").to_a
 buttons.each do |die_button|
   die_button.addEventListener("click") do |e|
     DiceSelection.add_die(die_button[:dataset][:die])
