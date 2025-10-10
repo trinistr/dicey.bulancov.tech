@@ -7,6 +7,7 @@ JS::RequireRemote.instance.load("dicey.pack.rb")
 JS::RequireRemote.instance.load("vector_number.pack.rb")
 
 DOCUMENT = JS.global[:document]
+WINDOW = JS.global[:window]
 
 module RAX
   class << self
@@ -55,21 +56,29 @@ module DiceSelection
   class << self
     include Observable
 
-    def add_die(value)
-      value = value.to_s.strip
-      return false if value.empty?
+    def add_dice(*values)
+      values.each do |value|
+        value = value.to_s.strip
+        return false if value.empty?
 
-      new_dice = Array(FOUNDRY.call(value))
-      chips = new_dice.map { |die| build_die_chip(die) }
-      selected_dice_list.append(*chips)
-      notify_observers
-      chips
+        new_dice = Array(FOUNDRY.call(value))
+        chips = new_dice.map { |die| build_die_chip(die) }
+        selected_dice_list.append(*chips)
+      rescue Dicey::DiceyError
+        next
+      end
+      notify_observers(dice)
     end
 
     def remove_die(node)
       node.remove
-      notify_observers
+      notify_observers(dice)
       node
+    end
+
+    def clear_dice
+      selected_dice_list.replaceChildren
+      notify_observers(dice)
     end
 
     def dice
@@ -239,7 +248,7 @@ end
 buttons = DOCUMENT.getElementById("dice-selection").querySelectorAll(".dice-button").to_a
 buttons.each do |die_button|
   die_button.addEventListener("click") do |e|
-    DiceSelection.add_die(die_button[:dataset][:die])
+    DiceSelection.add_dice(die_button[:dataset][:die])
   end
 end
 
@@ -251,7 +260,13 @@ custom_dice_form.addEventListener("submit") do |e|
   next unless custom_dice_input[:validity][:valid] == JS::True
 
   value = custom_dice_input[:value]
-  DiceSelection.add_die(value)
+  DiceSelection.add_dice(value)
+end
+
+# Clear dice button
+clear_button = DOCUMENT.getElementById("clear-button")
+clear_button.addEventListener("click") do |e|
+  DiceSelection.clear_dice
 end
 
 # Reroll button
@@ -262,14 +277,22 @@ end
 
 # --- Main loop of observing dice selection
 
-updater = ->(*) {
-  dice = DiceSelection.dice
+dice_updater = ->(dice) {
   DistributionController.update_distribution(dice)
   RollController.replace_roll(dice)
 }
-DiceSelection.add_observer(updater, :call)
+DiceSelection.add_observer(dice_updater, :call)
 
 # --- All done, hide loader
 
 DOCUMENT.getElementById("loader").hidePopover()
 print "Running Dicey v#{Dicey::VERSION} and VectorNumber v#{VectorNumber::VERSION}"
+
+# --- Add dice from URL parameters
+
+params = JS.global[:URLSearchParams].new(WINDOW[:location][:search])
+DiceSelection.add_dice(*params.keys.to_a)
+search_params_updater = ->(dice) {
+  WINDOW[:history].replaceState(nil, nil, "?#{dice.join("&")}")
+}
+DiceSelection.add_observer(search_params_updater, :call)
