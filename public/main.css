@@ -311,7 +311,7 @@ footer {
 
             input {
                 @media (max-width: 768px) {
-                    /* For some reasong this is needed to make the input take less than ≈400px. */
+                    /* For some reason this is needed to make the input take less than ≈400px. */
                     width: 100%;
                 }
                 border: 0.15rem solid var(--border-color);
@@ -354,14 +354,21 @@ footer {
     .selected-dice {
         .dice-list {
             min-block-size: 3rem;
+            margin-block-end: 1rem;
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
 
             &:empty::before {
                 inline-size: 100%;
-                display: block;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
                 content: "None yet";
+            }
+            &:empty+button {
+                display: none;
             }
 
             .dice-chip {
