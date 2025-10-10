@@ -130,8 +130,8 @@
                 <form action="javascript:void(0);" id="custom-dice-form">
                     <label for="custom-dice-input">Add a custom die:</label>
                     <div class="input-group">
-                        <input type="text" placeholder="e.g. d3, -4..4, or 2,3,11,2" id="custom-dice-input"
-                            pattern="\s*[Dd]?([1-9][0-9]*|\(?-?[1-9][0-9]*(-|..|...|–|—|…)-?[1-9][0-9]*\)?|\(?-?[0-9]+((,-?[0-9]+)+|,)\)?|\(?[^'&quot;\(\),]+((,[^'&quot;\(\),]+)+|,)\)?)\s*"
+                        <input type="text" placeholder="e.g. 2d3, -4..4, or 2,3,11,2" id="custom-dice-input"
+                            pattern="\s*(?:(?:[1-9][0-9]*)?[Dd])?(?:[1-9][0-9]*|\(?-?[1-9][0-9]*(?:-|..|...|–|—|…)-?[1-9][0-9]*\)?|\(?-?[0-9]+(?:(?:,-?[0-9]+)+|,)\)?|\(?[^'&quot;\(\),]+(?:(?:,[^'&quot;\(\),]+)+|,)\)?)\s*"
                             enterkeyhint="done" oninput="(e) => e.target.checkValidity()">
                         <button class="standout-button" id="custom-dice-button">Add</button>
                     </div>

@@ -59,16 +59,15 @@ module DiceSelection
       value = value.to_s.strip
       return false if value.empty?
 
-      chip = build_die_chip(value)
-      selected_dice_list.appendChild(chip)
-      changed
+      new_dice = Array(FOUNDRY.call(value))
+      chips = new_dice.map { |die| build_die_chip(die) }
+      selected_dice_list.append(*chips)
       notify_observers
-      chip
+      chips
     end
 
     def remove_die(node)
       node.remove
-      changed
       notify_observers
       node
     end
@@ -83,8 +82,8 @@ module DiceSelection
       DOCUMENT.getElementById("selected-dice-list")
     end
 
-    def build_die_chip(value)
-      name = determine_die_name(value)
+    def build_die_chip(die)
+      name = die.to_s
       chip =
         RAX.("div", class: "dice-chip", "data-die": name) do
           [
@@ -100,8 +99,9 @@ module DiceSelection
       chip.querySelector("button").addEventListener("click") { remove_die(chip) }
     end
 
-    def determine_die_name(value)
-      FOUNDRY.call(value).to_s
+    def notify_observers(...)
+      changed
+      super
     end
   end
 end
