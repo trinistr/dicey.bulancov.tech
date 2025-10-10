@@ -182,11 +182,11 @@ module RollController
 end
 
 module DistributionCalculator
-  CALCULATORS = Dicey::CLI::Blender::ROLL_FREQUENCY_CALCULATORS
+  SELECTOR = Dicey::SumFrequencyCalculators::AutoSelector.new
 
   class << self
     def calculate(dice)
-      results = CALCULATORS.find { |calculator| calculator.valid_for?(dice) }.call(dice)
+      results = SELECTOR.call(dice).call(dice)
       total_weight = results.values.sum
       results.transform_values { [_1, Rational(_1, total_weight)] }
     end

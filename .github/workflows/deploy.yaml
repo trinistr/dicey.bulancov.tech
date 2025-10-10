@@ -33,11 +33,11 @@ jobs:
         with:
           persist-credentials: false
           repository: "trinistr/dicey"
-          ref: "v0.16.0"
+          ref: "v0.16.2"
           path: "dicey"
       - name: Pack Dicey
         working-directory: ./dicey
-        run: ../pack_gem lib/dicey.rb lib/dicey/cli/blender.rb
+        run: ../pack_gem
       - name: Copy packed Dicey to deploy folder
         run: cp dicey/tmp/dicey.pack.rb public/dicey.pack.rb
       - name: Checkout VectorNumber repository
