@@ -55,28 +55,54 @@ module DiceSelection
   class << self
     include Observable
 
+    attr_reader :dice
+
+    def clear_dice
+      reset_dice_set
+      selected_dice_list.replaceChildren
+      notify_observers
+    end
+
     def add_die(value)
       value = value.to_s.strip
       return false if value.empty?
 
       new_dice = Array(FOUNDRY.call(value))
+      add_dice_to_set(new_dice)
+
       chips = new_dice.map { |die| build_die_chip(die) }
       selected_dice_list.append(*chips)
       notify_observers
       chips
     end
 
-    def remove_die(node)
+    def remove_die(node, die)
+      remove_die_from_set(die)
       node.remove
       notify_observers
       node
     end
 
-    def dice
-      selected_dice_list[:children].to_a.map { |chip| FOUNDRY.call(chip[:dataset][:die].to_s) }
+    private
+
+    def reset_dice_set
+      @dice_set = Set.new.compare_by_identity
+      reset_dice_array
     end
 
-    private
+    def add_dice_to_set(dice)
+      @dice_set.merge(dice)
+      reset_dice_array
+    end
+
+    def remove_die_from_set(die)
+      @dice_set.delete(die)
+      reset_dice_array
+    end
+
+    def reset_dice_array
+      @dice = @dice_set.to_a
+    end
 
     def selected_dice_list
       DOCUMENT.getElementById("selected-dice-list")
@@ -91,12 +117,12 @@ module DiceSelection
             RAX.("button", class: "remove-button", "aria-label": "Remove") { "×" },
           ]
         end
-      add_remove_listener_to_chip(chip)
+      add_remove_listener_to_chip(chip, die)
       chip
     end
 
-    def add_remove_listener_to_chip(chip)
-      chip.querySelector("button").addEventListener("click") { remove_die(chip) }
+    def add_remove_listener_to_chip(chip, die)
+      chip.querySelector("button").addEventListener("click") { remove_die(chip, die) }
     end
 
     def notify_observers(...)
@@ -108,9 +134,8 @@ end
 
 module RollController
   class << self
-    def replace_roll(dice)
-      self.current_dice = dice
-      roll_output.replaceChildren and return if dice.empty?
+    def replace_roll
+      roll_output.replaceChildren and return if no_dice_selected?
 
       current_dice.each(&:roll)
       roll_output.replaceChildren(*build_full_roll_nodes)
@@ -135,14 +160,16 @@ module RollController
 
     private
 
-    attr_accessor :current_dice
-
-    def roll_output
-      DOCUMENT.getElementById("roll-output")
+    def current_dice
+      DiceSelection.dice
     end
 
     def no_dice_selected?
       !current_dice || current_dice.empty?
+    end
+
+    def roll_output
+      DOCUMENT.getElementById("roll-output")
     end
 
     def build_full_roll_nodes
@@ -195,8 +222,8 @@ end
 
 module DistributionController
   class << self
-    def update_distribution(dice)
-      results = DistributionCalculator.calculate(dice)
+    def update_distribution
+      results = DistributionCalculator.calculate(current_dice)
       max_percentage = results.values.map(&:last).max
       data = results.map do |outcome, (weight, probability)|
         percentage = (probability * 100).to_f.round(2)
@@ -206,6 +233,10 @@ module DistributionController
     end
 
     private
+
+    def current_dice
+      DiceSelection.dice
+    end
 
     def results_table_body
       DOCUMENT.getElementById("results-table-body")
@@ -262,14 +293,15 @@ end
 
 # --- Main loop of observing dice selection
 
+DiceSelection.clear_dice
+
 updater = ->(*) {
-  dice = DiceSelection.dice
-  DistributionController.update_distribution(dice)
-  RollController.replace_roll(dice)
+  DistributionController.update_distribution
+  RollController.replace_roll
 }
 DiceSelection.add_observer(updater, :call)
 
 # --- All done, hide loader
 
 DOCUMENT.getElementById("loader").hidePopover()
-print "Running Dicey v#{Dicey::VERSION} and VectorNumber v#{VectorNumber::VERSION}"
+print "Running Dicey #{Dicey::VERSION} and VectorNumber #{VectorNumber::VERSION}"
