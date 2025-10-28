@@ -182,7 +182,7 @@ module RollController
 end
 
 module DistributionCalculator
-  SELECTOR = Dicey::SumFrequencyCalculators::AutoSelector.new
+  SELECTOR = Dicey::DistributionCalculators::AutoSelector.new
 
   class << self
     def calculate(dice)
