@@ -7,17 +7,26 @@
     <title>Dicey — Dice distribution calculator and roller with exciting possibilities</title>
     <link rel="stylesheet" href="main.css">
     <link rel="icon" type="image/svg+xml" href="D12.svg">
-    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@ruby/3.4-wasm-wasi@2.7.2/dist/ruby+stdlib.wasm"
-        as="fetch" crossorigin="anonymous">
-    <link rel="preload" href="main.rb" type="text/ruby" as="fetch" crossorigin="anonymous">
-    <link rel="preload" href="dicey.pack.rb" type="text/ruby" as="fetch" crossorigin="anonymous">
-    <link rel="preload" href="vector_number.pack.rb" type="text/ruby" as="fetch" crossorigin="anonymous">
 </head>
 
 <body>
     <noscript>
         <p>JavaScript is required to use this calculator. Sad but true.</p>
     </noscript>
+    <script>
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("/worker.js")
+                .catch((error) => {
+                    console.error(`Service worker registration failed: ${error}`);
+                });
+            navigator.serviceWorker.getRegistration().then((reg) => {
+                if (reg?.active && !navigator.serviceWorker.controller) {
+                    // There's an active SW, but no controller for this tab, reload.
+                    window.location.reload();
+                }
+            });
+        }
+    </script>
 
     <div class="loader" id="loader" popover="manual">
         <div class="loader-spinner">&nbsp;</div>
