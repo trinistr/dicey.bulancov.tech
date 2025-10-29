@@ -296,8 +296,8 @@ end
 DiceSelection.clear_dice
 
 updater = ->(*) {
-  DistributionController.update_distribution
   RollController.replace_roll
+  DistributionController.update_distribution
 }
 DiceSelection.add_observer(updater, :call)
 

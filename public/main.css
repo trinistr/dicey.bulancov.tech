@@ -25,14 +25,14 @@
     --complement-darker: #010929;
 
     --standout-color: var(--tertiary);
+    --standout-font-color: var(--complement-darker);
     --standout-alt-color: var(--secondary);
 
     --font-color: var(--complement-darker);
     --font-emph-color: var(--secondary-darker);
     --background-color: var(--primary-lighter);
     --background-special-color: hsl(from var(--background-color) h s 90%);
-    --font-alt-color: var(--primary-lighter);
-    --font-alt-emph-color: var(--secondary-lighter);
+    --font-alt-color: var(--primary-light);
     --background-alt-color: var(--primary-light);
 
     --link-color: var(--complement-light);
@@ -71,10 +71,6 @@
     margin: 0;
     padding: 0;
     transition: all 0.2s;
-
-    :focus-visible {
-        outline: 0.25em solid var(--border-color);
-    }
 }
 
 body {
@@ -91,6 +87,10 @@ body {
 [title] {
     text-decoration: underline dotted 1px currentcolor;
     cursor: help;
+}
+
+:focus-visible {
+    outline: 0.25rem solid var(--border-color);
 }
 
 h1 {
@@ -125,12 +125,23 @@ button {
     cursor: pointer;
 }
 
-.standout-button {
+.surface {
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 0.25rem 1rem var(--shadow-color);
+    background-color: var(--surface-color);
+
+    @media (max-width: 480px) {
+        padding: 1rem;
+    }
+}
+
+.standout-button, .mini-button {
     border-radius: 0.5rem;
     padding-block: 0.75rem;
     padding-inline: 1rem;
     background: var(--standout-color);
-    color: var(--font-color);
+    color: var(--standout-font-color);
     font-weight: bold;
 
     &:hover, &:focus-visible {
@@ -141,6 +152,11 @@ button {
     &:active {
         background: hsl(from var(--standout-alt-color) h s 60%);
     }
+}
+
+.mini-button {
+    padding-block: 0.1rem;
+    padding-inline: 0.5rem;
 }
 
 .loader {
@@ -176,16 +192,6 @@ button {
     }
 }
 
-.surface {
-    border-radius: 1rem;
-    padding: 1.5rem;
-    box-shadow: 0 0.25rem 1rem var(--shadow-color);
-    background-color: var(--surface-color);
-    @media (max-width: 480px) {
-        padding: 1rem;
-    }
-}
-
 .container {
     max-inline-size: 1200px;
     margin-inline: auto;
@@ -217,6 +223,20 @@ button {
 header {
     grid-area: header;
     text-align: center;
+    position: relative;
+    
+    #install-button-container {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+
+        @media (max-width: 600px) {
+            margin-block-start: 0.5rem;
+            position: initial;
+            display: flex;
+            justify-content: flex-end;
+        }
+    }
 }
 
 footer {
@@ -306,7 +326,6 @@ footer {
         }
 
         .input-group {
-            margin-block-end: 1rem;
             display: flex;
 
             input {
@@ -334,19 +353,9 @@ footer {
             }
 
             button {
-                border: 0.15rem solid var(--standout-color);
-                border-inline-start: none;
                 border-radius: 0;
                 border-start-end-radius: 0.5rem;
                 border-end-end-radius: 0.5rem;
-
-                &:hover, &:focus-visible {
-                    border-color: var(--standout-alt-color);
-                }
-
-                &:active {
-                    border-color: hsl(from var(--standout-alt-color) h s 60%);
-                }
             }
         }
     }
@@ -494,15 +503,6 @@ footer {
         inline-size: 100%;
         display: block;
         font-size: 1.2rem;
-
-        &:hover {
-            background: var(--standout-alt-color);
-            color: var(--font-alt-color);
-        }
-
-        &:active {
-            background: hsl(from var(--standout-alt-color) h s 60%);
-        }
     }
 }
 
