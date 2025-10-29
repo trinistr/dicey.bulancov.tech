@@ -70,7 +70,7 @@ const networkFirst = async ({request, event}) => {
 addEventListener("fetch", (event) => {
     const url = new URL(event.request.url);
     let strategy = networkFirst;
-    if (url.pathname.match(/cdn\.jsdelivr\.net/)) {
+    if (url.host === "cdn.jsdelivr.net") {
         strategy = cacheFirst;
     }
     event.respondWith(
