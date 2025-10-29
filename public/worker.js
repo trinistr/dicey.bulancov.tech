@@ -14,6 +14,7 @@ addEventListener("install", (event) => {
             "/dicey.pack.rb",
             "/vector_number.pack.rb",
             "/D12.svg",
+            "/dicey.webmanifest",
             "https://cdn.jsdelivr.net/npm/@ruby/3.4-wasm-wasi@2.7.2/dist/browser.script.iife.js",
         ])
     ));
