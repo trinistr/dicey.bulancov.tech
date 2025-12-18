@@ -295,9 +295,6 @@ footer {
                 * {
                     stroke-width: 4px;
                     stroke: var(--primary-dark);
-                }
-
-                polygon, ellipse {
                     fill: var(--primary-light);
                 }
 
