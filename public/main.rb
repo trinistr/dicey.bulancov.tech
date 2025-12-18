@@ -254,7 +254,7 @@ module DistributionController
             RAX.("td") { "#{probability_string} (#{percentage}%)" },
             RAX.("td") do
               RAX.("div", class: "probability-bar-container") do
-                RAX.("div", class: "probability-bar", "data-ratio": "#{ratio}%")
+                RAX.("div", class: "probability-bar", "data-ratio": "#{ratio}%", style: "inline-size:#{ratio}%;")
               end
             end,
           ]
