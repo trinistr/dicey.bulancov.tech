@@ -16,8 +16,6 @@ jobs:
   build:
     if: ${{ github.repository_owner == 'trinistr' }}
     runs-on: ubuntu-latest
-    env:
-      BUNDLE_ONLY: "default documentation"
     steps:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1

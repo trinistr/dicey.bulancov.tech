@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 # This scripts packs all `require_relative`d files into a single file for ease of distribution.
-# Usage: bin/pack_files [files...]
+# Usage: pack_gem [files...]
 # If no files are specified, root files are lib/*.rb.
 
 # rubocop:disable Style/GlobalVars
