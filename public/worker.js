@@ -71,7 +71,10 @@ const networkOnly = async ({ request, event }) => fetch(request);
 addEventListener("fetch", (event) => {
     const url = new URL(event.request.url);
     let strategy = networkFirst;
-    if (url.host === "cdn.jsdelivr.net") {
+    if (url.protocol !== "https:") {
+        strategy = networkOnly;
+    }
+    else if (url.host === "cdn.jsdelivr.net") {
         strategy = cacheFirst;
     }
     else if (url.pathname.match(/\.png$/)) {
