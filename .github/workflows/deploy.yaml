@@ -43,7 +43,7 @@ jobs:
         with:
           persist-credentials: false
           repository: "trinistr/vector_number"
-          ref: "v0.4.3"
+          ref: "v0.5.0"
           path: "vector_number"
       - name: Pack VectorNumber
         working-directory: ./vector_number
