@@ -426,7 +426,7 @@ footer {
     block-size: min-content;
 
     .dice-list {
-        min-block-size: calc(2rem + 2*var(--border-width));
+        min-block-size: calc(2.5rem + 2*var(--border-width));
         display: flex;
         flex-wrap: wrap;
         gap: 0.5rem;
@@ -628,7 +628,7 @@ footer {
             .probability-bar {
                 block-size: 100%;
                 margin: calc(0 - var(--border-width));
-                border: var(--border-width) solid var(--primary-light);
+                /* border: var(--border-width) solid var(--primary-light); */
                 border-radius: 0.25rem;
                 background-color: var(--primary-light);
 
