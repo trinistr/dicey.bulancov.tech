@@ -65,21 +65,22 @@ const networkFirst = async ({request, event}) => {
         return cachedResponse || Response.error();
     }
 };
-const networkOnly = async ({ request, event }) => fetch(request);
+const noCache = async ({ request, event }) => fetch(request);
 
 // Cache CDN's artifacts aggressively, but refresh our own assets when possible.
 addEventListener("fetch", (event) => {
     const url = new URL(event.request.url);
     let strategy = networkFirst;
-    if (url.protocol !== "https:") {
-        strategy = networkOnly;
+    if (url.protocol !== "https:" && url.protocol !== "http:") {
+        strategy = noCache;
     }
     else if (url.host === "cdn.jsdelivr.net") {
         strategy = cacheFirst;
     }
     else if (url.pathname.match(/\.png$/)) {
-        strategy = networkOnly;
+        strategy = noCache;
     }
+    // console.log(`Using ${strategy.name} for ${url}`);
     event.respondWith(
         strategy({
             request: event.request,

@@ -4,14 +4,14 @@
 
 This is an online version of [Dicey](https://github.com/trinistr/dicey): a dice distribution calculator and roller.
 
-See it in action at [https://dicey.bulancov.tech]()!
+See it in action at [dicey.bulancov.tech](https://dicey.bulancov.tech)!
 
 It has these amazing, never-before-seen features:
 - support for custom dice: any numbers will do!
 - support for textual dice: who needs numbers when you can use words?
 - fast<sup>1</sup> calculation of probabilities for *each* possible roll
 - meaningful addition of text and numbers
-- works well in major browsers, with desktop and mobile layouts and a dark theme
+- works well in major browsers, with desktop and mobile layouts and light/dark themes
 - can be used offline or installed as a web app
 - will probably hang your browser tab
 
@@ -20,13 +20,24 @@ It has these amazing, never-before-seen features:
 ## How's it work?
 
 There are several components to this app:
-- a [Ruby WASM module](https://github.com/ruby/ruby.wasm) that allows running Ruby code in the browser
+- a [Ruby interpreter WASM module](https://github.com/ruby/ruby.wasm) that allows running Ruby code in the browser
 - [Dicey](https://github.com/trinistr/dicey), the underlying Ruby gem that does the calculations
 - [VectorNumber](https://github.com/trinistr/vector_number), another Ruby gem that handles mathematical operations on mixed text and numbers
 - a [gluing script](/public/main.rb) (in Ruby again) that handles UI
 - and a [service worker](/public/worker.js) to infest your computer with all of the above
 
 There are also my awesome CSS, HTML and SVG skills that created the UI.
+
+### What's the custom dice syntax?
+
+Informally, following forms are allowed:
+- `N` — a regular die with *N* faces
+- `N..M` — a die with faces from *N* to *M*
+  - Accepts negative integers
+- `A,B,C,D` — a die with faces *A*, *B*, *C*, *D*
+  - Accepts fractions in decimal-dotted and vulgar forms: `1.5`, `3/2`
+  - Accepts arbitrary text
+- Any form above can be prefixed with `Nd` to add *N* dice
 
 ## Why's this?
 
