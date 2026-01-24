@@ -24,9 +24,11 @@
     --complement-dark: #081b68;
     --complement-darker: #010929;
 
-    --standout-color: var(--tertiary);
     --standout-font-color: var(--complement-darker);
+    --standout-color: var(--tertiary);
     --standout-alt-color: var(--secondary);
+    --standout-active-color: var(--tertiary-light);
+    --standout-active-alt-color: var(--secondary-light);
 
     --font-color: var(--complement-darker);
     --font-emph-color: var(--secondary-darker);
@@ -140,17 +142,17 @@ button {
     border-radius: 0.5rem;
     padding-block: 0.75rem;
     padding-inline: 1rem;
-    background: var(--standout-color);
+    background: var(--standout-active-color);
     color: var(--standout-font-color);
     font-weight: bold;
 
     &:hover, &:focus-visible {
-        background: var(--standout-alt-color);
+        background: var(--standout-active-alt-color);
         color: var(--font-alt-color);
     }
 
     &:active {
-        background: hsl(from var(--standout-alt-color) h s 60%);
+        background: hsl(from var(--standout-active-alt-color) h s 60%);
     }
 }
 
@@ -394,12 +396,12 @@ footer {
                     font-size: 1.2rem;
 
                     &:hover, &:focus-visible {
-                        background: var(--standout-color);
-                        color: var(--standout-alt-color);
+                        background: var(--standout-active-color);
+                        color: var(--standout-font-color);
                     }
                     &:active {
-                        background: hsl(from var(--standout-color) h s 60%);
-                        color: var(--standout-alt-color);
+                        background: hsl(from var(--standout-active-color) h s 60%);
+                        color: var(--standout-font-color);
                     }
                 }
             }
