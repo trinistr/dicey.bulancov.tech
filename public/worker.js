@@ -1,4 +1,4 @@
-const logFetches = true;
+const logFetches = location.protocol !== "https:";
 
 const currentCacheVersion = "v1";
 const currentCaches = {
