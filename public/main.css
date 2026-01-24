@@ -42,6 +42,7 @@
     --border-color: var(--complement-light);
     --shadow-color: hsl(from var(--complement-darker) h s l / 0.2);
     --border-standout-color: var(--tertiary-dark);
+    --border-width: 0.15rem;
 
     --surface-color: #ffffff;
     --border-soft-color: hsl(from var(--border-color) h 5% 90%);
@@ -139,7 +140,7 @@ button {
 }
 
 .normal-button {
-    border: 0.15rem solid var(--border-color);
+    border: var(--border-width) solid var(--border-color);
     border-radius: 1rem;
     padding: 0.8em;
     background: var(--background-color);
@@ -155,6 +156,7 @@ button {
 }
 
 .standout-button {
+    border: var(--border-width) solid var(--standout-active-color);
     border-radius: 0.5rem;
     padding-block: 0.75rem;
     padding-inline: 1rem;
@@ -163,11 +165,13 @@ button {
     font-weight: bold;
 
     &:hover, &:focus-visible {
+        border-color: var(--standout-active-alt-color);
         background: var(--standout-active-alt-color);
         color: var(--font-alt-color);
     }
 
     &:active {
+        border-color: hsl(from var(--standout-active-alt-color) h s 60%);
         background: hsl(from var(--standout-active-alt-color) h s 60%);
     }
 }
@@ -343,7 +347,7 @@ footer {
                     /* For some reason this is needed to make the input take less than ≈400px. */
                     inline-size: 100%;
                 }
-                border: 0.15rem solid var(--border-color);
+                border: var(--border-width) solid var(--border-color);
                 border-inline-end: none;
                 border-start-start-radius: 0.5rem;
                 border-end-start-radius: 0.5rem;
@@ -388,6 +392,7 @@ footer {
         }
 
         .dice-chip {
+            border: var(--border-width) solid var(--standout-alt-color);
             border-radius: 2rem;
             padding-block: 0.5rem;
             padding-inline: 1rem;
@@ -448,7 +453,7 @@ footer {
 
         .die-roll-container {
             /* Min inline-size allows for two digits, working with most practical dice. */
-            min-inline-size: calc(2rem + 2ch);
+            min-inline-size: calc(2rem + 2ch + 2*var(--border-width));
             padding: 0;
             display: flex;
             gap: 0;
@@ -456,7 +461,7 @@ footer {
             font-size: 1.5rem;
 
             .die-description {
-                border-block-end: 0.1rem solid var(--background-special-color);
+                border-block-end: var(--border-width) solid var(--background-special-color);
                 padding-inline: 0.25rem;
                 font-size: 0.5em;
             }
@@ -469,22 +474,20 @@ footer {
             
             &:hover, &:focus-visible {
                 box-shadow: 0 0.5rem 1rem var(--shadow-color);
-                transform: translateY(-0.25rem);
+                /* Using pixels for integer translation to avoid sub-pixel artifacts. */
+                transform: translateY(-5px);
             }
             
             &:active {
                 box-shadow: none;
                 transform: translateY(0);
-
-                .die-description {
-                    border-block-end-color: hsl(from var(--standout-alt-color) h s 60%);
-                }
             }
         }
 
         .roll-total {
-            min-inline-size: calc(2rem + 2ch);
+            min-inline-size: calc(2rem + 2ch + 2*var(--border-width));
             margin-inline-start: 1rem;
+            border: var(--border-width) solid var(--standout-alt-color);
             border-radius: calc(1.2rem + 1lh) / calc(1rem + 1lh);
             padding-block: 0.5rem;
             padding-inline: 1rem;
@@ -565,13 +568,35 @@ footer {
             border-block-end: 0.1rem solid var(--border-soft-color);
             padding-block: 0.1rem;
 
+            .probability-bar-container {
+                inline-size: 100%;
+                block-size: 0.8lh;
+                border-radius: 0.25rem;
+                background: var(--border-soft-color);
+            }
+
+            .probability-bar {
+                block-size: 100%;
+                margin: calc(0 - var(--border-width));
+                border: var(--border-width) solid var(--primary-light);
+                border-radius: 0.25rem;
+                background-color: var(--primary-light);
+
+                @media (prefers-color-scheme: dark) {
+                    border-color: var(--primary);
+                    background-color: var(--primary);
+                }
+            }
+
             &:hover {
                 background-color: var(--background-special-color);
 
                 .probability-bar {
+                    border-color: var(--primary);
                     background-color: var(--primary);
 
                     @media (prefers-color-scheme: dark) {
+                        border-color: var(--primary-light);
                         background-color: var(--primary-light);
                     }
                 }
@@ -579,23 +604,6 @@ footer {
 
             &:last-of-type {
                 border-block-end: none;
-            }
-        }
-    }
-
-    .probability-bar-container {
-        inline-size: 100%;
-        block-size: 0.8lh;
-        border-radius: 0.25rem;
-        background: var(--border-soft-color);
-
-        .probability-bar {
-            block-size: 100%;
-            border-radius: 0.25rem;
-            background-color: var(--primary-light);
-
-            @media (prefers-color-scheme: dark) {
-                background-color: var(--primary);
             }
         }
     }
