@@ -47,7 +47,7 @@
     --surface-color: #ffffff;
     --border-soft-color: hsl(from var(--border-color) h 5% 90%);
 
-    --invalid-color: #ff0000;
+    --danger-color: crimson;
     
     @media (prefers-color-scheme: dark) {
         --font-color: var(--primary-lighter);
@@ -68,6 +68,8 @@
     /* Reserve space for scrollbars (they will appear, trust). */
     scrollbar-gutter: stable;
 }
+
+/* Basic element styles */
 
 * {
     box-sizing: border-box;
@@ -125,8 +127,11 @@ a {
 button {
     border: none;
     line-height: 1.6;
+    font-family: inherit;
     cursor: pointer;
 }
+
+/* General classes */
 
 .surface {
     border-radius: 1rem;
@@ -176,10 +181,31 @@ button {
     }
 }
 
+.danger-button {
+    border: var(--border-width) solid var(--danger-color);
+    border-radius: 0.5rem;
+    padding-block: 0.75rem;
+    padding-inline: 1rem;
+    background: var(--danger-color);
+    color: var(--standout-font-color);
+    font-weight: bold;
+
+    &:hover, &:focus-visible {
+        border-color: var(--font-alt-color);
+        color: var(--font-alt-color);
+    }
+
+    &:active {
+        background: hsl(from var(--danger-color) h s 60%);
+    }
+}
+
 .mini-button {
     padding-block: 0.1rem;
     padding-inline: 0.5rem;
 }
+
+/* Spinner loader */
 
 .loader {
     inset-block-start: 0;
@@ -214,6 +240,8 @@ button {
     }
 }
 
+/* Layout */
+
 .container {
     max-inline-size: 1200px;
     margin-inline: auto;
@@ -247,19 +275,6 @@ header {
     grid-area: header;
     text-align: center;
     position: relative;
-    
-    #install-button-container {
-        position: absolute;
-        inset-block-start: 1rem;
-        inset-inline-end: 1rem;
-
-        @media (max-width: 600px) {
-            margin-block-start: 0.5rem;
-            position: initial;
-            display: flex;
-            justify-content: flex-end;
-        }
-    }
 }
 
 footer {
@@ -267,6 +282,8 @@ footer {
     text-align: center;
     font-size: small;
 }
+
+/* Main blocks */
 
 .dice-selection {
     grid-area: dice-selection;
@@ -358,11 +375,7 @@ footer {
                 font-size: 1rem;
 
                 &:invalid {
-                    border-color: var(--invalid-color);
-
-                    &+button {
-                        border-color: var(--invalid-color);
-                    }
+                    border-color: var(--danger-color);
                 }
             }
 
@@ -606,5 +619,28 @@ footer {
                 border-block-end: none;
             }
         }
+    }
+}
+
+/* Other elements */
+
+#install-button-container {
+    position: absolute;
+    inset-block-start: 1rem;
+    inset-inline-end: 1rem;
+
+    @media (max-width: 600px) {
+        margin-block-start: 0.5rem;
+        position: initial;
+        display: flex;
+        justify-content: flex-end;
+    }
+}
+
+#footer-offline-data {
+    block-size: min-content;
+
+    #delete-data-button {
+        margin-block-start: 0.5em;
     }
 }

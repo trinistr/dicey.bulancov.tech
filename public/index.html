@@ -172,10 +172,18 @@
 
         <footer class="surface">
             <nav>
-                <p><b>Dicey</b> is brought to you by <a href="https://bulancov.pro">Alexander&nbsp;Bulancov</a>.</p>
+                <p>©&nbsp;2025-2026&nbsp;<a href="https://bulancov.pro">Alexander&nbsp;Bulancov</a>.</p>
                 <p>See <a href="https://github.com/trinistr/dicey">Dicey's repository</a> on GitHub for the underlying Ruby gem and <a href="https://github.com/trinistr/dicey.bulancov.tech">this webapp's repository</a> to see how it works in the browser. Suggestions are welcome!</p>
             </nav>
         </footer>
+
+        <div id="footer-offline-data" class="surface">
+            <div>
+                <span>Offline/cached data:</span>
+                <span id="offline-data-size">???</span>
+            </div>
+            <button class="danger-button mini-button" id="delete-data-button">Clear data</button>
+        </div>
     </div>
 
     <script>
@@ -186,20 +194,84 @@
                 ["with advanced capabilities", "with exciting possibilities", "of questionable quality", "(may contain monkeys)"]
             )
         });
+
+        const loadRuby = () => {
+            if (window.RUBY_INTERPRETER_LOADED) return;
+            window.RUBY_INTERPRETER_LOADED = true;
+            
+            const script = document.createElement("script");
+            script.src = "https://cdn.jsdelivr.net/npm/@ruby/3.4-wasm-wasi@2.7.2/dist/browser.script.iife.js";
+            script.async = true;
+            
+            document.head.appendChild(script);
+        }
         if ("serviceWorker" in navigator) {
             navigator.serviceWorker.getRegistration().then((reg) => {
                 if (reg?.active && !navigator.serviceWorker.controller) {
                     // There's an active SW, but no controller for this tab, reload.
+                    // Happens after force-reload.
                     window.location.reload();
                 }
             });
-            window.addEventListener("load", () => {
-                navigator.serviceWorker.register("/worker.js")
-                    .catch((error) => {
-                        console.error(`Service worker registration failed: ${error}`);
-                    });
+            navigator.serviceWorker.addEventListener("message", (event) => {
+                if (event.data.type === "CACHE_SIZE_UPDATE") {
+                    updateOfflineDataSize(event.data.size);
+                }
+            });
+            window.addEventListener("load", async () => {
+                try {
+                    const registration = await navigator.serviceWorker.register("/worker.js");
+                    if (registration.active) {
+                        loadRuby();
+                    }
+                    else {
+                        registration.installing.addEventListener('statechange', (e) => {
+                            if (e.target.state === 'activated') {
+                                loadRuby();
+                            }
+                        });
+                    }
+
+                    setTimeout(() => {
+                        if (!window.RUBY_INTERPRETER_LOADED) {
+                            console.warn("Service worker activation timeout, loading Ruby anyway");
+                            loadRuby();
+                        }
+                    }, 5000);
+                }
+                catch (error) {
+                    console.error(`Service worker registration failed: ${error}`);
+                    loadRuby();
+                }
             });
         }
+        else {
+            loadRuby();
+            document.getElementById("footer-offline-data").style.display = "none";
+        }
+
+        const updateOfflineDataSize = (size) => {
+            const element = document.querySelector("#offline-data-size");
+            const sizeMB = (typeof size === "number") ? `reportedly ${Math.round(size / 1024 / 1024)} MB` : size
+            element.textContent = sizeMB;
+        };
+
+        const deleteButton = document.querySelector("#delete-data-button");
+        deleteButton.addEventListener("click", () => {
+            if (confirm("Clear offline data?\n\nThis will delete all cached data this site has saved on your device. The site will work slower on your next visit as everything re-downloads.\n\nThis will not save space if the site is used again, normally, all cached data is cached for a reason.")) {
+                navigator.serviceWorker.getRegistrations().then((registrations) => {
+                    for (const registration of registrations) {
+                        registration.unregister();
+                    }
+                });
+                caches.keys().then((keys) => {
+                    for (const key of keys) {
+                        caches.delete(key);
+                    }
+                    updateOfflineDataSize("???");
+                });
+            }
+        });
 
         let installEvent = null;
         const installButton = document.querySelector("#install");
@@ -218,7 +290,6 @@
             }
         });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/@ruby/3.4-wasm-wasi@2.7.2/dist/browser.script.iife.js"></script>
     <script src="main.rb" type="text/ruby" data-eval="async"></script>
 </body>
 

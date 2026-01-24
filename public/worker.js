@@ -1,28 +1,45 @@
 const currentCacheName = "v1";
 
-const putInCache = async (request, response) => {
-    const cache = await caches.open(currentCacheName);
-    await cache.put(request, response);
-};
-
 addEventListener("install", (event) => {
     event.waitUntil(
         caches.open(currentCacheName).then((cache) => cache.addAll([
             "/",
+            "/D12.svg",
+            "/dicey.webmanifest",
             "/main.css",
             "/main.rb",
             "/dicey.pack.rb",
             "/vector_number.pack.rb",
-            "/D12.svg",
-            "/dicey.webmanifest",
             "https://cdn.jsdelivr.net/npm/@ruby/3.4-wasm-wasi@2.7.2/dist/browser.script.iife.js",
+            "https://cdn.jsdelivr.net/npm/@ruby/3.4-wasm-wasi@2.7.2/dist/ruby+stdlib.wasm"
         ])
     ));
     skipWaiting();
 });
 addEventListener("activate", (event) => {
     event.waitUntil(clients.claim());
+    broadcastCacheSize();
 });
+
+const broadcastCacheSize = async () => {
+    const size = await ((navigator.storage && navigator.storage.estimate) ?
+        navigator.storage.estimate().then((estimate) => estimate.usage).catch(() => "???")
+        : Promise.resolve("???"));
+
+    const clients = await self.clients.matchAll();
+    clients.forEach(client => {
+        client.postMessage({
+            type: "CACHE_SIZE_UPDATE",
+            size: size
+        });
+    });
+}
+const putInCache = async (request, response) => {
+    const cache = await caches.open(currentCacheName);
+    await cache.put(request, response);
+
+    broadcastCacheSize();
+};
 
 // Fetch caching strategies
 const cacheFirst = async ({ request, event }) => {
