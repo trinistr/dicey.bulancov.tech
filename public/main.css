@@ -138,7 +138,23 @@ button {
     }
 }
 
-.standout-button, .mini-button {
+.normal-button {
+    border: 0.15rem solid var(--border-color);
+    border-radius: 1rem;
+    padding: 0.8em;
+    background: var(--background-color);
+    color: var(--font-color);
+
+    &:hover, &:focus-visible {
+        background: var(--standout-active-color);
+    }
+
+    &:active {
+        background: hsl(from var(--standout-active-color) h s 60%);
+    }
+}
+
+.standout-button {
     border-radius: 0.5rem;
     padding-block: 0.75rem;
     padding-inline: 1rem;
@@ -199,18 +215,19 @@ button {
     margin-inline: auto;
     display: grid;
     gap: 2rem;
-    grid-template-areas:
+    grid-template:
         "header header"
+        "dice-selection selected-dice"
         "dice-selection roll-results"
-        "dice-selection distribution-results"
+        "dice-selection distribution-results" 1fr
         "footer footer";
     grid-template-columns: 1fr 2fr;
-    grid-template-rows: auto auto 1fr;
 
     @media (max-width: 768px) {
         grid-template-areas:
             "header"
             "dice-selection"
+            "selected-dice"
             "roll-results"
             "distribution-results"
             "footer";
@@ -218,7 +235,7 @@ button {
         grid-template-rows: none;
     }
     @media (max-width: 480px) {
-        gap: 1.5rem;
+        gap: 1rem;
     }
 }
 
@@ -248,8 +265,8 @@ footer {
 }
 
 .dice-selection {
-    block-size: min-content;
     grid-area: dice-selection;
+    block-size: min-content;
 
     &> div {
         margin-block-end: 2rem;
@@ -267,25 +284,19 @@ footer {
         }
 
         .dice-button {
-            border: 0.15rem solid var(--border-color);
-            border-radius: 1rem;
-            padding: 0.8rem;
             display: flex;
             gap: 0.5rem;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: var(--background-color);
             font-size: 1rem;
 
             &:hover, &:focus-visible {
-                background: var(--standout-color);
                 box-shadow: 0 0.5rem 1rem var(--shadow-color);
                 transform: translateY(-0.25rem);
             }
 
             &:active {
-                background: hsl(from var(--standout-color) h s 60%);
                 box-shadow: none;
                 transform: translateY(0);
             }
@@ -358,52 +369,44 @@ footer {
             }
         }
     }
+}
 
-    .selected-dice {
-        .dice-list {
-            min-block-size: 3rem;
+.selected-dice {
+    grid-area: selected-dice;
+    block-size: min-content;
+
+    .dice-list {
+        min-block-size: 3rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+
+        &:empty::before {
+            inline-size: 100%;
+            display: block;
+            content: "None yet";
+        }
+
+        .dice-chip {
+            border-radius: 2rem;
+            padding-block: 0.5rem;
+            padding-inline: 1rem;
             display: flex;
-            flex-wrap: wrap;
             gap: 0.5rem;
+            align-items: center;
+            background: var(--standout-alt-color);
+            color: var(--font-alt-color);
+            font-weight: bold;
 
-            &:empty::before {
-                inline-size: 100%;
-                display: block;
-                content: "None yet";
-            }
-
-            .dice-chip {
-                border-radius: 2rem;
-                padding-block: 0.5rem;
-                padding-inline: 1rem;
-                display: flex;
-                gap: 0.5rem;
+            .remove-button {
+                block-size: 2rem;
+                inline-size: 2rem;
+                margin-inline-end: -0.5rem;
+                border-radius: 50%;
+                padding: 0;
                 align-items: center;
-                background: var(--standout-alt-color);
-                color: var(--font-alt-color);
                 font-weight: bold;
-
-                .remove-button {
-                    block-size: 2rem;
-                    inline-size: 2rem;
-                    margin-inline-end: -0.5rem;
-                    border-radius: 50%;
-                    padding: 0;
-                    align-items: center;
-                    background: var(--background-color);
-                    color: var(--font-color);
-                    font-weight: bold;
-                    font-size: 1.2rem;
-
-                    &:hover, &:focus-visible {
-                        background: var(--standout-active-color);
-                        color: var(--standout-font-color);
-                    }
-                    &:active {
-                        background: hsl(from var(--standout-active-color) h s 60%);
-                        color: var(--standout-font-color);
-                    }
-                }
+                font-size: 1rem;
             }
         }
     }
@@ -416,8 +419,8 @@ footer {
 }
 
 .roll-results {
-    block-size: min-content;
     grid-area: roll-results;
+    block-size: min-content;
 
     .roll-output {
         /* block-size of .roll-total + padding */
@@ -506,9 +509,9 @@ footer {
 }
 
 .distribution-results {
-    block-size: min-content;
     grid-area: distribution-results;
-    
+    block-size: min-content;
+
     #empty-results-table {
         display: none;
     }

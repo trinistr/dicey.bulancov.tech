@@ -114,7 +114,7 @@ module DiceSelection
         RAX.("div", class: "dice-chip", "data-die": name) do
           [
             name,
-            RAX.("button", class: "remove-button", "aria-label": "Remove") { "×" },
+            RAX.("button", class: "remove-button normal-button", "aria-label": "Remove") { "×" },
           ]
         end
       add_remove_listener_to_chip(chip, die)

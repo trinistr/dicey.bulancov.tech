@@ -29,7 +29,7 @@
             <h1>Dicey</h1>
             <p>Dice distribution calculator and roller <i id="dicey-description">with advanced capabilities</i>!</p>
             <div id="install-button-container">
-                <button class="mini-button install-button" id="install" hidden>Install as webapp</button>
+                <button class="standout-button mini-button install-button" id="install" hidden>Install as webapp</button>
             </div>
         </header>
 
@@ -37,14 +37,14 @@
             <div class="dice-buttons">
                 <h2>Common dice</h2>
                 <div class="dice-grid">
-                    <button class="dice-button" data-die="D4" id="die-d4">
+                    <button class="dice-button normal-button" data-die="D4" id="die-d4">
                         <svg viewBox="-10 -10 120 120">
                             <polygon points="50,10 100,90 30,100 0,85" />
                             <line x1="50" y1="10" x2="30" y2="100" />
                         </svg>
                         <span>D4</span>
                     </button>
-                    <button class="dice-button" data-die="D6" id="die-d6">
+                    <button class="dice-button normal-button" data-die="D6" id="die-d6">
                         <svg viewBox="-10 -10 120 120">
                             <polygon points="0,20 60,15 100,20 100,90 40,100 0,90" />
                             <polyline points="0,20 40,25 100,20" />
@@ -52,7 +52,7 @@
                         </svg>
                         <span>D6</span>
                     </button>
-                    <button class="dice-button" data-die="D8" id="die-d8">
+                    <button class="dice-button normal-button" data-die="D8" id="die-d8">
                         <svg viewBox="-10 -10 120 120">
                             <polygon points="50,0 0,50 50,100 100,55" />
                             <polyline points="0,50 25,60 100,55" />
@@ -60,7 +60,7 @@
                         </svg>
                         <span>D8</span>
                     </button>
-                    <button class="dice-button" data-die="D10" id="die-d10">
+                    <button class="dice-button normal-button" data-die="D10" id="die-d10">
                         <svg viewBox="-10 -10 120 120" id="die-d10-image">
                             <polygon points="50,0 95,40 95,55 50,95 5,55 5,40" />
                             <polyline points="5,55 25,45 50,60 75,45 95,55" />
@@ -70,7 +70,7 @@
                         </svg>
                         <span>D10</span>
                     </button>
-                    <button class="dice-button" data-die="D12" id="die-d12">
+                    <button class="dice-button normal-button" data-die="D12" id="die-d12">
                         <svg viewBox="-10 -10 120 120">
                             <polygon points="50,0 80,5 100,40 95,65 80,90 50,100 20,90 5,65 0,40 20,5" />
                             <polyline points="5,65 25,55 50,70 75,55 95,65" />
@@ -81,7 +81,7 @@
                         </svg>
                         <span>D12</span>
                     </button>
-                    <button class="dice-button" data-die="D20" id="die-d20">
+                    <button class="dice-button normal-button" data-die="D20" id="die-d20">
                         <svg viewBox="-10 -10 120 120">
                             <polygon points="50,0 95,20 95,75 50,100 5,75 5,20" />
                             <polyline points="5,20 25,35 75,35 95,20" />
@@ -98,14 +98,14 @@
             <div class="dice-buttons">
                 <h2>Uncommon dice</h2>
                 <div class="dice-grid">
-                    <button class="dice-button" data-die="D100" id="die-d100">
+                    <button class="dice-button normal-button" data-die="D100" id="die-d100">
                         <svg viewBox="-10 -10 120 120">
                             <g transform="translate(-20, 5)"><use href="#die-d10-image" width="80" height="80" transform="rotate(-10)" /></g>
                             <g transform="translate(50, 25)"><use href="#die-d10-image" width="80" height="80" transform="rotate(18)" /></g>
                         </svg>
                         <span>D100</span>
                     </button>
-                    <button class="dice-button" data-die="🐵️,🐒️" id="die-coin">
+                    <button class="dice-button normal-button" data-die="🐵️,🐒️" id="die-coin">
                         <svg viewBox="-10 -10 120 120">
                             <ellipse cx="50" cy="65" rx="50" ry="30" />
                             <ellipse cx="50" cy="55" rx="50" ry="30" />
@@ -113,7 +113,7 @@
                         </svg>
                         <span>Coin</span>
                     </button>
-                    <button class="dice-button" data-die="👑,♠️,♥️,♣️,♦️,⚓️" id="die-crown-anchor">
+                    <button class="dice-button normal-button" data-die="👑,♠️,♥️,♣️,♦️,⚓️" id="die-crown-anchor">
                         <svg viewBox="-10 -10 120 120">
                             <polygon points="0,20 60,15 100,20 100,90 40,100 0,90" />
                             <polyline points="0,20 40,25 100,20" />
@@ -138,11 +138,11 @@
                     </div>
                 </form>
             </div>
+        </div>
 
-            <div class="selected-dice">
-                <h2>Selected dice</h2>
-                <div class="dice-list" id="selected-dice-list"></div>
-            </div>
+        <div class="selected-dice surface">
+            <h2>Selected dice</h2>
+            <div class="dice-list" id="selected-dice-list"></div>
         </div>
 
         <div class="roll-results surface">
