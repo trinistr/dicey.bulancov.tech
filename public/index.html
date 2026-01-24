@@ -27,7 +27,7 @@
     <div class="container">
         <header class="surface">
             <h1>Dicey</h1>
-            <p>Dice distribution calculator and roller <i id="dicey-description">with advanced capabilities</i>!</p>
+            <p>Dice distribution calculator and roller <i id="dicey-description">with advanced capabilities</i><i>!</i></p>
             <div id="install-button-container">
                 <button class="standout-button mini-button install-button" id="install" hidden>Install as webapp</button>
             </div>
@@ -173,7 +173,8 @@
         <footer class="surface">
             <nav>
                 <p>©&nbsp;2025-2026&nbsp;<a href="https://bulancov.pro">Alexander&nbsp;Bulancov</a>.</p>
-                <p>See <a href="https://github.com/trinistr/dicey">Dicey's repository</a> on GitHub for the underlying Ruby gem and <a href="https://github.com/trinistr/dicey.bulancov.tech">this webapp's repository</a> to see how it works in the browser. Suggestions are welcome!</p>
+                <p>See <a href="https://github.com/trinistr/dicey">Dicey's repository</a> on GitHub for the underlying Ruby gem and <a href="https://github.com/trinistr/dicey.bulancov.tech">this webapp's repository</a> to see how it works in the browser.</p>
+                <p>Suggestions are welcome!</p>
             </nav>
         </footer>
 
@@ -191,7 +192,7 @@
         window.addEventListener("load", () => {
             const description = document.getElementById("dicey-description");
             description.textContent = sample(
-                ["with advanced capabilities", "with exciting possibilities", "of questionable quality", "(may contain monkeys)"]
+                ["with advanced capabilities", "with exciting possibilities", "of questionable quality", "(may contain monkeys)", "backed by questionable math", "(consult your dice dealer)", "utilising synergistic rolling paradigms"]
             )
         });
 

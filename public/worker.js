@@ -1,8 +1,14 @@
-const currentCacheName = "v1";
+const logFetches = true;
+
+const currentCacheVersion = "v1";
+const currentCaches = {
+    refreshed: `refreshed-${currentCacheVersion}`,
+    static: `static-${currentCacheVersion}`,
+};
 
 addEventListener("install", (event) => {
     event.waitUntil(
-        caches.open(currentCacheName).then((cache) => cache.addAll([
+        caches.open(currentCaches.refreshed).then((cache) => cache.addAll([
             "/",
             "/D12.svg",
             "/dicey.webmanifest",
@@ -10,15 +16,34 @@ addEventListener("install", (event) => {
             "/main.rb",
             "/dicey.pack.rb",
             "/vector_number.pack.rb",
+        ])
+    ));
+    event.waitUntil(
+        caches.open(currentCaches.static).then((cache) => cache.addAll([
             "https://cdn.jsdelivr.net/npm/@ruby/3.4-wasm-wasi@2.7.2/dist/browser.script.iife.js",
-            "https://cdn.jsdelivr.net/npm/@ruby/3.4-wasm-wasi@2.7.2/dist/ruby+stdlib.wasm"
+            "https://cdn.jsdelivr.net/npm/@ruby/3.4-wasm-wasi@2.7.2/dist/ruby+stdlib.wasm",
+            "https://fonts.gstatic.com/s/vendsans/v1/E21l_d7ijufNwCJPEUscVA9V.woff2",
+            "https://fonts.gstatic.com/s/zain/v4/sykz-y9lm7soOG7ohS23-w.woff2",
         ])
     ));
     skipWaiting();
 });
 addEventListener("activate", (event) => {
+    const expectedCacheNamesSet = new Set(Object.values(currentCaches));
+    event.waitUntil(
+        caches.keys().then((cacheNames) =>
+            Promise.all(
+                cacheNames.map((cacheName) => {
+                    if (!expectedCacheNamesSet.has(cacheName)) {
+                        console.log("Deleting out of date cache:", cacheName);
+                        return caches.delete(cacheName);
+                    }
+                    return undefined;
+                }),
+            ),
+        ),
+    );
     event.waitUntil(clients.claim());
-    broadcastCacheSize();
 });
 
 const broadcastCacheSize = async () => {
@@ -34,8 +59,8 @@ const broadcastCacheSize = async () => {
         });
     });
 }
-const putInCache = async (request, response) => {
-    const cache = await caches.open(currentCacheName);
+const putInCache = async (request, response, cacheName) => {
+    const cache = await caches.open(cacheName);
     await cache.put(request, response);
 
     broadcastCacheSize();
@@ -48,9 +73,10 @@ const cacheFirst = async ({ request, event }) => {
         return responseFromCache;
     }
     try {
+        if (logFetches) console.log(`Fetching ${request.url}`);
         const networkResponse = await fetch(request);
         if (networkResponse.ok) {
-            event.waitUntil(putInCache(request, networkResponse.clone()));
+            event.waitUntil(putInCache(request, networkResponse.clone(), currentCaches.static));
         }
         return networkResponse;
     } catch (error) {
@@ -59,11 +85,12 @@ const cacheFirst = async ({ request, event }) => {
 };
 const cacheFirstWithRefresh = async ({request, event}) => {
     const fetchResponsePromise = fetch(request).then(async (networkResponse) => {
+        if (logFetches) console.log(`Fetching ${request.url}`);
         if (networkResponse.ok) {
-            event.waitUntil(putInCache(request, networkResponse.clone()));
+            putInCache(request, networkResponse.clone(), currentCaches.refreshed);
         }
         return networkResponse;
-    });
+    }).catch(() => Response.error());
     try {
         return (await caches.match(request)) || (await fetchResponsePromise);
     } catch (error) {
@@ -72,9 +99,10 @@ const cacheFirstWithRefresh = async ({request, event}) => {
 };
 const networkFirst = async ({request, event}) => {
     try {
+        if (logFetches) console.log(`Fetching ${request.url}`);
         const networkResponse = await fetch(request);
         if (networkResponse.ok) {
-            event.waitUntil(putInCache(request, networkResponse.clone()));
+            event.waitUntil(putInCache(request, networkResponse.clone(), currentCaches.refreshed));
         }
         return networkResponse;
     } catch (error) {
@@ -87,21 +115,26 @@ const noCache = async ({ request, event }) => fetch(request);
 // Cache CDN's artifacts aggressively, but refresh our own assets when possible.
 addEventListener("fetch", (event) => {
     const url = new URL(event.request.url);
-    let strategy = networkFirst;
+    let strategy = cacheFirstWithRefresh;
     if (url.protocol !== "https:" && url.protocol !== "http:") {
         strategy = noCache;
     }
-    else if (url.host === "cdn.jsdelivr.net") {
+    else if (url.origin !== location.origin) {
         strategy = cacheFirst;
     }
     else if (url.pathname.match(/\.png$/)) {
+        // Only happens when installing webapp.
         strategy = noCache;
     }
-    // console.log(`Using ${strategy.name} for ${url}`);
+    else if (url.pathname === "/") {
+        strategy = networkFirst;
+    }
+    if (logFetches) console.log(`Using ${strategy.name} for ${url}`);
     event.respondWith(
         strategy({
             request: event.request,
             event,
         }),
     );
+    broadcastCacheSize();
 });
