@@ -285,7 +285,7 @@ button {
         "dice-selection selected-dice"
         "dice-selection roll-results"
         "dice-selection distribution-results" 1fr
-        "footer footer";
+        "navfooter navfooter";
     grid-template-columns: 1fr 2fr;
 
     @media (max-width: 768px) {
@@ -295,7 +295,7 @@ button {
             "selected-dice"
             "roll-results"
             "distribution-results"
-            "footer";
+            "navfooter";
         grid-template-columns: 1fr;
         grid-template-rows: none;
     }
@@ -311,9 +311,12 @@ header {
 }
 
 footer {
-    grid-area: footer;
     text-align: center;
-    /* font-size: small; */
+    font-size: smaller;
+}
+
+footer:has(nav) {
+    grid-area: navfooter;
 }
 
 /* Main blocks */
@@ -571,7 +574,7 @@ footer {
 
     &:has(tbody:empty) {
         thead {
-            display: none;
+            /* display: none; */
         }
 
         #empty-results-table {

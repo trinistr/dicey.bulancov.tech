@@ -170,21 +170,25 @@
             </div>
         </div>
 
-        <footer class="surface">
-            <nav>
+        <footer>
+            <nav class="surface">
                 <p>©&nbsp;2025-2026&nbsp;<a href="https://bulancov.pro">Alexander&nbsp;Bulancov</a>.</p>
-                <p>See <a href="https://github.com/trinistr/dicey">Dicey's repository</a> on GitHub for the underlying Ruby gem and <a href="https://github.com/trinistr/dicey.bulancov.tech">this webapp's repository</a> to see how it works in the browser.</p>
-                <p>Suggestions are welcome!</p>
+                <p>Interested in how this works? Check out the <a href="https://github.com/trinistr/dicey.bulancov.tech">repository on GitHub</a>. Suggestions are welcome!</p>
             </nav>
         </footer>
 
-        <div id="footer-offline-data" class="surface">
-            <div>
+        <footer id="footer-offline-data" class="surface">
+            <p>
                 <span>Offline/cached data:</span>
                 <span id="offline-data-size">???</span>
-            </div>
+            </p>
             <button class="danger-button mini-button" id="delete-data-button">Clear data</button>
-        </div>
+        </footer>
+        
+        <footer id="footer-third-party" class="surface">
+            <p>This site uses free, open-source software created by many people to make it possible.</p>
+            <p>Please see <a href="https://github.com/ruby/ruby.wasm">ruby.wasm</a> repository for more information.</p>
+        </footer>
     </div>
 
     <script>
@@ -259,7 +263,7 @@
 
         const deleteButton = document.querySelector("#delete-data-button");
         deleteButton.addEventListener("click", () => {
-            if (confirm("Clear offline data?\n\nThis will delete all cached data this site has saved on your device. The site will work slower on your next visit as everything re-downloads.\n\nThis will not save space if the site is used again, normally, all cached data is cached for a reason.")) {
+            if (confirm("Clear offline data?\n\nThis will delete all cached data this site has saved on your device. The site will no longer work offline and will re-download everything on next visit.\n\nThis will not save space if the site is used again, normally; all cached data is cached for a reason.")) {
                 navigator.serviceWorker.getRegistrations().then((registrations) => {
                     for (const registration of registrations) {
                         registration.unregister();
