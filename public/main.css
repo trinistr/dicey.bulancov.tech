@@ -1,3 +1,5 @@
+@namespace SVG url("http://www.w3.org/2000/svg");
+
 /* https://fonts.googleapis.com/css2?family=Vend+Sans:ital,wght@0,300..700&family=Zain:wght@700&display=swap */
 /* latin-ext */
 @font-face {
@@ -361,21 +363,6 @@ footer:has(nav) {
             svg {
                 block-size: 2lh;
                 inline-size: 2lh;
-
-                * {
-                    stroke-width: 4px;
-                    stroke: var(--primary-dark);
-                    fill: var(--primary-light);
-                }
-
-                polyline {
-                    fill: none;
-                }
-
-                text {
-                    font-size: 30px;
-                    text-anchor: middle;
-                }
             }
 
             span {
@@ -422,6 +409,21 @@ footer:has(nav) {
             }
         }
     }
+}
+
+/* At least one browser requires SVG styles to be defined at top level. */
+SVG|* {
+    stroke-width: 4px;
+    stroke: var(--primary-dark);
+    fill: var(--primary-light);
+}
+SVG|polyline {
+    fill: none;
+}
+SVG|text {
+    font-family: "Vend Sans", sans-serif;
+    font-size: 30px;
+    text-anchor: middle;
 }
 
 .selected-dice {
