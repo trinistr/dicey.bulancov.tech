@@ -115,7 +115,7 @@ const noCache = async ({ request, event }) => fetch(request);
 // Cache CDN's artifacts aggressively, but refresh our own assets when possible.
 addEventListener("fetch", (event) => {
     const url = new URL(event.request.url);
-    let strategy = cacheFirstWithRefresh;
+    let strategy = networkFirst;
     if (url.protocol !== "https:" && url.protocol !== "http:") {
         strategy = noCache;
     }
@@ -125,9 +125,6 @@ addEventListener("fetch", (event) => {
     else if (url.pathname.match(/\.png$/)) {
         // Only happens when installing webapp.
         strategy = noCache;
-    }
-    else if (url.pathname === "/") {
-        strategy = networkFirst;
     }
     if (logFetches) console.log(`Using ${strategy.name} for ${url}`);
     event.respondWith(
