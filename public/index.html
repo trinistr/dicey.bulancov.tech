@@ -27,9 +27,9 @@
     <div class="container">
         <header class="surface">
             <h1>Dicey</h1>
-            <p>Dice distribution calculator and roller <i id="dicey-description">with advanced capabilities</i><i>!</i></p>
+            <p>Dice distribution calculator and roller <span id="dicey-description">with advanced capabilities</span>!</p>
             <div id="install-button-container">
-                <button class="standout-button mini-button install-button" id="install" hidden>Install as webapp</button>
+                <button class="standout-button mini-button" id="install-button" hidden>Install as webapp</button>
             </div>
         </header>
 
@@ -142,13 +142,16 @@
 
         <div class="selected-dice surface">
             <h2>Selected dice</h2>
+            <div id="remove-dice-button-container">
+                <button class="danger-button mini-button" id="remove-dice-button" disabled>Remove all</button>
+            </div>
             <div class="dice-list" id="selected-dice-list"></div>
         </div>
 
         <div class="roll-results surface">
             <h2>Roll results</h2>
             <div class="roll-output" id="roll-output"></div>
-            <button class="standout-button reroll-button" id="reroll-button">Reroll</button>
+            <button class="standout-button reroll-button" id="reroll-button" disabled>Reroll</button>
         </div>
 
         <div class="distribution-results surface">
@@ -279,7 +282,7 @@
         });
 
         let installEvent = null;
-        const installButton = document.querySelector("#install");
+        const installButton = document.querySelector("#install-button");
         window.addEventListener("beforeinstallprompt", (event) => {
             event.preventDefault();
             installEvent = event;

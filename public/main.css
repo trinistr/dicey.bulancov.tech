@@ -78,8 +78,8 @@
     --surface-color: #ffffff;
     --border-soft-color: hsl(from var(--border-color) h 5% 90%);
 
-    --danger-color: crimson;
-    
+    --danger-color: orangered;
+
     @media (prefers-color-scheme: dark) {
         --font-color: var(--primary-lighter);
         --font-emph-color: var(--secondary-lighter);
@@ -94,6 +94,8 @@
 
         --surface-color: #1a1a2a;
         --border-soft-color: hsl(from var(--border-color) h 15% 40%);
+
+        --danger-color: crimson;
     }
 
     /* Reserve space for scrollbars (they will appear, trust). */
@@ -139,7 +141,7 @@ h1 {
 }
 
 h2 {
-    margin-block-end: 0.5rem;
+    margin-block-end: 0.2lh;
     color: var(--standout-color);
     font-size: 1.25rem;
 }
@@ -164,11 +166,17 @@ button {
     line-height: 1.6;
     font-family: inherit;
     cursor: pointer;
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
 }
 
 /* General classes */
 
 .surface {
+    position: relative;
     border-radius: 1rem;
     padding: 1.5rem;
     box-shadow: 0 0.25rem 1rem var(--shadow-color);
@@ -186,12 +194,14 @@ button {
     background: var(--background-color);
     color: var(--font-color);
 
-    &:hover, &:focus-visible {
-        background: var(--standout-active-color);
-    }
+    &:not(:disabled) {
+        &:hover, &:focus-visible {
+            background: var(--standout-active-color);
+        }
 
-    &:active {
-        background: hsl(from var(--standout-active-color) h s 60%);
+        &:active {
+            background: hsl(from var(--standout-active-color) h s 60%);
+        }
     }
 }
 
@@ -204,15 +214,17 @@ button {
     color: var(--standout-font-color);
     font-weight: bold;
 
-    &:hover, &:focus-visible {
-        border-color: var(--standout-active-alt-color);
-        background: var(--standout-active-alt-color);
-        color: var(--font-alt-color);
-    }
+    &:not(:disabled) {
+        &:hover, &:focus-visible {
+            border-color: var(--standout-active-alt-color);
+            background: var(--standout-active-alt-color);
+            color: var(--font-alt-color);
+        }
 
-    &:active {
-        border-color: hsl(from var(--standout-active-alt-color) h s 60%);
-        background: hsl(from var(--standout-active-alt-color) h s 60%);
+        &:active {
+            border-color: hsl(from var(--standout-active-alt-color) h s 60%);
+            background: hsl(from var(--standout-active-alt-color) h s 60%);
+        }
     }
 }
 
@@ -225,13 +237,15 @@ button {
     color: var(--standout-font-color);
     font-weight: bold;
 
-    &:hover, &:focus-visible {
-        border-color: var(--font-alt-color);
-        color: var(--font-alt-color);
-    }
+    &:not(:disabled) {
+        &:hover, &:focus-visible {
+            border-color: var(--font-alt-color);
+            color: var(--font-alt-color);
+        }
 
-    &:active {
-        background: hsl(from var(--danger-color) h s 60%);
+        &:active {
+            background: hsl(from var(--danger-color) h s 70%);
+        }
     }
 }
 
@@ -676,6 +690,17 @@ SVG|text {
         position: initial;
         display: flex;
         justify-content: flex-end;
+    }
+}
+
+#remove-dice-button-container {
+    position: absolute;
+    inset-block-start: 1.7rem;
+    inset-inline-end: 1.5rem;
+
+    @media (max-width: 480px) {
+        inset-block-start: 1.2rem;
+        inset-inline-end: 1rem;
     }
 }
 

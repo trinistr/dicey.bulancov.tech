@@ -60,6 +60,7 @@ module DiceSelection
     def clear_dice
       reset_dice_set
       selected_dice_list.replaceChildren
+      remove_dice_button[:disabled] = true
       notify_observers
     end
 
@@ -69,6 +70,7 @@ module DiceSelection
 
       new_dice = Array(FOUNDRY.call(value))
       add_dice_to_set(new_dice)
+      remove_dice_button[:disabled] = false
 
       chips = new_dice.map { |die| build_die_chip(die) }
       selected_dice_list.append(*chips)
@@ -108,6 +110,10 @@ module DiceSelection
       DOCUMENT.getElementById("selected-dice-list")
     end
 
+    def remove_dice_button
+      DOCUMENT.getElementById("remove-dice-button")
+    end
+
     def build_die_chip(die)
       name = die.to_s
       chip =
@@ -135,11 +141,16 @@ end
 module RollController
   class << self
     def replace_roll
-      roll_output.replaceChildren and return if no_dice_selected?
-
-      current_dice.each(&:roll)
-      roll_output.replaceChildren(*build_full_roll_nodes)
-      set_total(current_dice.map(&:current))
+      if no_dice_selected?
+        roll_output.replaceChildren
+        reroll_button[:disabled] = true
+        return 
+      else
+        current_dice.each(&:roll)
+        roll_output.replaceChildren(*build_full_roll_nodes)
+        set_total(current_dice.map(&:current))
+        reroll_button[:disabled] = false
+      end
     end
 
     def reroll
@@ -170,6 +181,10 @@ module RollController
 
     def roll_output
       DOCUMENT.getElementById("roll-output")
+    end
+
+    def reroll_button
+      DOCUMENT.getElementById("reroll-button")
     end
 
     def build_full_roll_nodes
@@ -285,6 +300,12 @@ custom_dice_form.addEventListener("submit") do |e|
   DiceSelection.add_die(value)
 end
 
+# Remove all dice button
+remove_dice_button = DOCUMENT.getElementById("remove-dice-button")
+remove_dice_button.addEventListener("click") do |e|
+  DiceSelection.clear_dice
+end
+
 # Reroll button
 reroll_button = DOCUMENT.getElementById("reroll-button")
 reroll_button.addEventListener("click") do |e|
@@ -293,13 +314,12 @@ end
 
 # --- Main loop of observing dice selection
 
-DiceSelection.clear_dice
-
 updater = ->(*) {
   RollController.replace_roll
   DistributionController.update_distribution
 }
 DiceSelection.add_observer(updater, :call)
+DiceSelection.clear_dice
 
 # --- All done, hide loader
 
