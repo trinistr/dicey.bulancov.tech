@@ -241,7 +241,7 @@ module DistributionController
       results = DistributionCalculator.calculate(current_dice)
       max_percentage = results.values.map(&:last).max
       data = results.map do |outcome, (weight, probability)|
-        percentage = (probability * 100).to_f.round(2)
+        percentage = (probability * 100).to_f
         [outcome.to_s, weight.to_s, probability, percentage, percentage / max_percentage]
       end
       results_table_body.replaceChildren(*build_table_rows(data))
@@ -266,7 +266,7 @@ module DistributionController
           [
             RAX.("td") { outcome },
             RAX.("td") { weight },
-            RAX.("td") { "#{probability_string} (#{percentage}%)" },
+            RAX.("td") { "#{format("%.2f", percentage)}% (#{probability_string})" },
             RAX.("td") do
               RAX.("div", class: "probability-bar-container") do
                 RAX.("div", class: "probability-bar", "data-ratio": "#{ratio}%", style: "inline-size:#{ratio}%;")
