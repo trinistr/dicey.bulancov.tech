@@ -141,6 +141,7 @@ h1 {
 }
 
 h2 {
+    margin-block-start: -0.2rem;
     margin-block-end: 0.2lh;
     color: var(--standout-color);
     font-size: 1.25rem;
@@ -682,8 +683,8 @@ SVG|text {
 
 #install-button-container {
     position: absolute;
-    inset-block-start: 1rem;
-    inset-inline-end: 1rem;
+    inset-block-start: 1.5rem;
+    inset-inline-end: 1.5rem;
 
     @media (max-width: 600px) {
         margin-block-start: 0.5rem;
@@ -695,7 +696,7 @@ SVG|text {
 
 #remove-dice-button-container {
     position: absolute;
-    inset-block-start: 1.7rem;
+    inset-block-start: 1.5rem;
     inset-inline-end: 1.5rem;
 
     @media (max-width: 480px) {
