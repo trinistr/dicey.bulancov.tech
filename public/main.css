@@ -183,6 +183,8 @@ button {
     box-shadow: 0 0.25rem 1rem var(--shadow-color);
     background-color: var(--surface-color);
 
+    break-inside: avoid;
+
     @media (max-width: 480px) {
         padding: 1rem;
     }
@@ -381,7 +383,6 @@ footer:has(nav) {
             }
 
             span {
-                color: var(--font-color);
                 font-weight: bold;
             }
         }
