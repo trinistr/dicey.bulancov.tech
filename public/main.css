@@ -197,7 +197,7 @@ button {
     background: var(--background-color);
     color: var(--font-color);
 
-    &:not(:disabled) {
+    &:enabled {
         &:hover, &:focus-visible {
             background: var(--standout-active-color);
         }
@@ -217,7 +217,7 @@ button {
     color: var(--standout-font-color);
     font-weight: bold;
 
-    &:not(:disabled) {
+    &:enabled {
         &:hover, &:focus-visible {
             border-color: var(--standout-active-alt-color);
             background: var(--standout-active-alt-color);
@@ -240,7 +240,7 @@ button {
     color: var(--standout-font-color);
     font-weight: bold;
 
-    &:not(:disabled) {
+    &:enabled {
         &:hover, &:focus-visible {
             border-color: var(--font-alt-color);
             color: var(--font-alt-color);
