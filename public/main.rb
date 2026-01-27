@@ -7,6 +7,7 @@ JS::RequireRemote.instance.load("dicey.pack.rb")
 JS::RequireRemote.instance.load("vector_number.pack.rb")
 
 DOCUMENT = JS.global[:document]
+WINDOW = JS.global[:window]
 
 module RAX
   class << self
@@ -60,22 +61,24 @@ module DiceSelection
     def clear_dice
       reset_dice_set
       selected_dice_list.replaceChildren
-      remove_dice_button[:disabled] = true
       notify_observers
     end
 
-    def add_die(value)
-      value = value.to_s.strip
-      return false if value.empty?
+    def add_dice(*values)
+      values.each do |value|
+        value = value.to_s.strip
+        return false if value.empty?
 
-      new_dice = Array(FOUNDRY.call(value))
-      add_dice_to_set(new_dice)
-      remove_dice_button[:disabled] = false
-
-      chips = new_dice.map { |die| build_die_chip(die) }
-      selected_dice_list.append(*chips)
+        new_dice = Array(FOUNDRY.call(value))
+        add_dice_to_set(new_dice)
+        
+        chips = new_dice.map { |die| build_die_chip(die) }
+        selected_dice_list.append(*chips)
+      rescue Dicey::DiceyError
+        warn "Skipping invalid die definition: #{value}"
+        next
+      end
       notify_observers
-      chips
     end
 
     def remove_die(node, die)
@@ -110,10 +113,6 @@ module DiceSelection
       DOCUMENT.getElementById("selected-dice-list")
     end
 
-    def remove_dice_button
-      DOCUMENT.getElementById("remove-dice-button")
-    end
-
     def build_die_chip(die)
       name = die.to_s
       chip =
@@ -133,7 +132,7 @@ module DiceSelection
 
     def notify_observers(...)
       changed
-      super
+      super(dice, ...)
     end
   end
 end
@@ -143,13 +142,11 @@ module RollController
     def replace_roll
       if no_dice_selected?
         roll_output.replaceChildren
-        reroll_button[:disabled] = true
         return 
       else
         current_dice.each(&:roll)
         roll_output.replaceChildren(*build_full_roll_nodes)
         set_total(current_dice.map(&:current))
-        reroll_button[:disabled] = false
       end
     end
 
@@ -181,10 +178,6 @@ module RollController
 
     def roll_output
       DOCUMENT.getElementById("roll-output")
-    end
-
-    def reroll_button
-      DOCUMENT.getElementById("reroll-button")
     end
 
     def build_full_roll_nodes
@@ -285,7 +278,7 @@ end
 buttons = DOCUMENT.getElementById("dice-selection").querySelectorAll(".dice-button").to_a
 buttons.each do |die_button|
   die_button.addEventListener("click") do |e|
-    DiceSelection.add_die(die_button[:dataset][:die])
+    DiceSelection.add_dice(die_button[:dataset][:die])
   end
 end
 
@@ -314,12 +307,31 @@ end
 
 # --- Main loop of observing dice selection
 
-updater = ->(*) {
+updater = ->(dice) {
+  remove_dice_button[:disabled] = reroll_button[:disabled] = dice.empty?
   RollController.replace_roll
   DistributionController.update_distribution
 }
 DiceSelection.add_observer(updater, :call)
 DiceSelection.clear_dice
+
+# --- Set up dice <=> URL synchronization
+
+# Decode dice from initial URL parameters
+params = JS.global[:URLSearchParams].new(WINDOW[:location][:search])
+dice = params.entries.to_a.flat_map do |entry|
+  definition, count = entry.to_a.map!(&:to_s)
+  count == "" ? definition : Array.new(count.to_i, definition)
+end
+DiceSelection.add_dice(*dice)
+
+# Set URL updater, must be done after `clear_dice` above
+search_params_updater = ->(dice) {
+  chunks = dice.chunk(&:itself)
+  parts = chunks.map { |die, array| array.one? ? die.to_s : "#{die}=#{array.length}"}
+  WINDOW[:history].replaceState(nil, nil, "?#{parts.join("&")}")
+}
+DiceSelection.add_observer(search_params_updater, :call)
 
 # --- All done, hide loader
 
