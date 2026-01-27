@@ -233,10 +233,22 @@ module DistributionCalculator
   SELECTOR = Dicey::DistributionCalculators::AutoSelector.new
 
   class << self
+    # @return [Hash{Object => Array<Integer, Rational>}]
+    #   mapping of outcomes to weights and probabilities
     def calculate(dice)
       results = SELECTOR.call(dice).call(dice)
       total_weight = results.values.sum
       results.transform_values { [_1, Rational(_1, total_weight)] }
+    end
+
+    # @return [Array<Array<Object, Integer, Rational, Float, Float>>]
+    #   table with outcome, weight, rational probability, decimal probability, and normalized probability
+    def tabulate(dice)
+      results = calculate(dice)
+      max_probability = results.values.map(&:last).max
+      results.map do |outcome, (weight, probability)|
+        [outcome, weight, probability, probability.to_f, probability.to_f / max_probability]
+      end
     end
   end
 end
@@ -244,13 +256,17 @@ end
 module DistributionController
   class << self
     def update_distribution(dice)
-      results = DistributionCalculator.calculate(dice)
-      max_percentage = results.values.map(&:last).max
-      data = results.map do |outcome, (weight, probability)|
-        percentage = (probability * 100).to_f
-        [outcome.to_s, weight.to_s, probability, percentage, percentage / max_percentage]
-      end
+      data = DistributionCalculator.tabulate(dice)
       results_table_body.replaceChildren(*build_table_rows(data))
+    end
+
+    def export_as_csv
+      data = DistributionCalculator.tabulate(DiceSelection.dice)
+      csv = data.map do |(outcome, weight, probability_r, probability_f, ratio)|
+        %{"#{outcome.to_s.gsub('"', '""')}",#{weight},#{probability_f},"#{probability_r}",#{ratio}\n}
+      end
+      csv.unshift(%{"Outcome","Weight","Probability","Probability fraction","Normalized probability"\n})
+      csv
     end
 
     private
@@ -262,16 +278,16 @@ module DistributionController
     def build_table_rows(data)
       return [] if data.empty?
 
-      data.map do |(outcome, weight, probability, percentage, ratio)|
-        probability_string = "#{probability.numerator}​/​#{probability.denominator}"
+      data.map do |(outcome, weight, probability_r, probability_f, ratio)|
+        probability_string = "#{probability_r.numerator}​/​#{probability_r.denominator}"
         RAX.("tr") do
           [
-            RAX.("td") { outcome },
-            RAX.("td") { weight },
-            RAX.("td") { "#{format("%.2f", percentage)}% (#{probability_string})" },
+            RAX.("td") { outcome.to_s },
+            RAX.("td") { weight.to_s },
+            RAX.("td") { "#{format("%.2f", probability_f * 100)}% (#{probability_string})" },
             RAX.("td") do
               RAX.("div", class: "probability-bar-container") do
-                RAX.("div", class: "probability-bar", "data-ratio": "#{ratio}%", style: "inline-size:#{ratio}%;")
+                RAX.("div", class: "probability-bar", "data-ratio": "#{ratio}%", style: "inline-size:#{ratio * 100}%;")
               end
             end,
           ]
@@ -312,6 +328,17 @@ end
 reroll_button = DOCUMENT.getElementById("reroll-button")
 reroll_button.addEventListener("click") do |e|
   RollController.reroll
+end
+
+# Export as CSV button
+export_button = DOCUMENT.getElementById("export-csv-button")
+export_button.addEventListener("click") do |e|
+  csv = DistributionController.export_as_csv
+
+  blob = JS.global[:Blob].new(csv, { type: "text/csv", endings: "native" })
+  url = JS.global[:URL].createObjectURL(blob)
+  RAX.("a", href: url, download: "distribution.csv").click()
+  JS.global[:URL].revokeObjectURL(url)
 end
 
 # --- Main loop of observing dice selection
