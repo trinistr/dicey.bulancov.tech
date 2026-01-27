@@ -9,6 +9,7 @@ JS::RequireRemote.instance.load("vector_number.pack.rb")
 DOCUMENT = JS.global[:document]
 WINDOW = JS.global[:window]
 
+# This module provides ability to quickly create HTML, similar to JSX.
 module RAX
   class << self
     def call(tag, **properties, &children)
@@ -60,8 +61,8 @@ module DiceSelection
 
     def clear_dice
       reset_dice_set
-      selected_dice_list.replaceChildren
       notify_observers
+      true
     end
 
     def add_dice(*values)
@@ -71,32 +72,30 @@ module DiceSelection
 
         new_dice = Array(FOUNDRY.call(value))
         add_dice_to_set(new_dice)
-        
-        chips = new_dice.map { |die| build_die_chip(die) }
-        selected_dice_list.append(*chips)
       rescue Dicey::DiceyError
         warn "Skipping invalid die definition: #{value}"
         next
       end
       notify_observers
+      true
     end
 
-    def remove_die(node, die)
+    def remove_die(die)
       remove_die_from_set(die)
-      node.remove
       notify_observers
-      node
+      true
     end
 
     private
 
     def reset_dice_set
-      @dice_set = Set.new.compare_by_identity
+      # Using Hash as Set does not guarantee insert-order semantics.
+      @dice_set = Hash.new.compare_by_identity
       reset_dice_array
     end
 
     def add_dice_to_set(dice)
-      @dice_set.merge(dice)
+      dice.each { |die| @dice_set[die] = true }
       reset_dice_array
     end
 
@@ -106,8 +105,24 @@ module DiceSelection
     end
 
     def reset_dice_array
-      @dice = @dice_set.to_a
+      @dice = @dice_set.keys
     end
+
+    def notify_observers(...)
+      changed
+      super(dice, ...)
+    end
+  end
+end
+
+module DiceListController
+  class << self
+    def update_list(dice)
+      chips = dice.map { |die| build_die_chip(die) }
+      selected_dice_list.replaceChildren(*chips)
+    end
+
+    private
 
     def selected_dice_list
       DOCUMENT.getElementById("selected-dice-list")
@@ -127,12 +142,10 @@ module DiceSelection
     end
 
     def add_remove_listener_to_chip(chip, die)
-      chip.querySelector("button").addEventListener("click") { remove_die(chip, die) }
-    end
-
-    def notify_observers(...)
-      changed
-      super(dice, ...)
+      chip.querySelector("button").addEventListener("click") do
+        chip.remove
+        DiceSelection.remove_die(die)
+      end
     end
   end
 end
@@ -145,7 +158,7 @@ module RollController
         return 
       else
         current_dice.each(&:roll)
-        roll_output.replaceChildren(*build_full_roll_nodes)
+        roll_output.replaceChildren(*build_full_roll_nodes(current_dice))
         set_total(current_dice.map(&:current))
       end
     end
@@ -180,8 +193,8 @@ module RollController
       DOCUMENT.getElementById("roll-output")
     end
 
-    def build_full_roll_nodes
-      results = current_dice.map { |die| build_die_roll(die.to_s, die.current) }
+    def build_full_roll_nodes(dice)
+      results = dice.map { |die| build_die_roll(die.to_s, die.current) }
       results.each_with_index do |node, index|
         node.addEventListener("click") { reroll_die(index) }
       end
@@ -230,8 +243,8 @@ end
 
 module DistributionController
   class << self
-    def update_distribution
-      results = DistributionCalculator.calculate(current_dice)
+    def update_distribution(dice)
+      results = DistributionCalculator.calculate(dice)
       max_percentage = results.values.map(&:last).max
       data = results.map do |outcome, (weight, probability)|
         percentage = (probability * 100).to_f
@@ -241,10 +254,6 @@ module DistributionController
     end
 
     private
-
-    def current_dice
-      DiceSelection.dice
-    end
 
     def results_table_body
       DOCUMENT.getElementById("results-table-body")
@@ -309,8 +318,9 @@ end
 
 updater = ->(dice) {
   remove_dice_button[:disabled] = reroll_button[:disabled] = dice.empty?
+  DiceListController.update_list(dice)
   RollController.replace_roll
-  DistributionController.update_distribution
+  DistributionController.update_distribution(dice)
 }
 DiceSelection.add_observer(updater, :call)
 DiceSelection.clear_dice
