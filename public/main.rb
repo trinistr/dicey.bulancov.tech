@@ -344,7 +344,8 @@ DiceSelection.add_dice(*dice)
 search_params_updater = ->(dice) {
   chunks = dice.chunk(&:itself)
   parts = chunks.map { |die, array| array.one? ? die.to_s : "#{die}=#{array.length}"}
-  WINDOW[:history].replaceState(nil, nil, "?#{parts.join("&")}")
+  search_params = parts.any? ? "/?#{parts.join("&")}" : "/"
+  WINDOW[:history].replaceState(nil, "", search_params)
 }
 DiceSelection.add_observer(search_params_updater, :call)
 
