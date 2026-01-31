@@ -112,9 +112,11 @@ const networkFirst = async ({request, event}) => {
 };
 const noCache = async ({ request, event }) => fetch(request);
 
-// Cache CDN's artifacts aggressively, but refresh our own assets when possible.
 addEventListener("fetch", (event) => {
+    let request = event.request;
     const url = new URL(event.request.url);
+
+    // Cache CDN's artifacts aggressively, but refresh our own assets when possible.
     let strategy = networkFirst;
     if (url.protocol !== "https:" && url.protocol !== "http:") {
         strategy = noCache;
@@ -126,12 +128,15 @@ addEventListener("fetch", (event) => {
         // Only happens when installing webapp.
         strategy = noCache;
     }
+    else if (url.pathname.match(/\.svg$/)) {
+        strategy = cacheFirstWithRefresh;
+    }
+    else if (url.pathname === "/" && url.search !== "") {
+        url.search = "";
+        request = new Request(url);
+    }
+
     if (logFetches) console.log(`Using ${strategy.name} for ${url}`);
-    event.respondWith(
-        strategy({
-            request: event.request,
-            event,
-        }),
-    );
+    event.respondWith(strategy({request, event}));
     broadcastCacheSize();
 });
