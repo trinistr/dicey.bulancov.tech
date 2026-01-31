@@ -6,6 +6,8 @@ require "js/require_remote"
 JS::RequireRemote.instance.load("dicey.pack.rb")
 JS::RequireRemote.instance.load("vector_number.pack.rb")
 
+print "Running Dicey #{Dicey::VERSION} and VectorNumber #{VectorNumber::VERSION}"
+
 DOCUMENT = JS.global[:document]
 WINDOW = JS.global[:window]
 
@@ -220,9 +222,12 @@ module RollController
     end
 
     def set_total(rolls)
-      total = rolls.all?(Numeric) ? rolls.sum : VectorNumber.new(rolls)
+      total = VectorNumber.new(rolls)
       node = roll_output[:children].namedItem("roll-total")
-      node[:textContent] = total.to_s
+      node[:textContent] = total.to_s do |unit, v, i, op|
+        numeric = VectorNumber.numeric_unit?(unit)
+        "#{" " if i > 0}#{v.positive? ? ("+" if i > 0) : "-"}#{" " if i > 0}#{v.abs if numeric || v.abs != 1}#{op unless numeric || v.abs == 1}#{unit}"
+      end
       node[:classList].toggle("just-rolled", true)
       JS.global[:setTimeout].apply(-> { node[:classList].toggle("just-rolled", false) }, 100)
     end
@@ -346,4 +351,3 @@ DiceSelection.add_observer(search_params_updater, :call)
 # --- All done, hide loader
 
 DOCUMENT.getElementById("loader").hidePopover()
-print "Running Dicey #{Dicey::VERSION} and VectorNumber #{VectorNumber::VERSION}"
