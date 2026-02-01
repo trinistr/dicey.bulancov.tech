@@ -1,4 +1,4 @@
-# Dicey Online
+# Dicey on the Web
 
 ## What's this?
 

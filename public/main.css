@@ -253,7 +253,7 @@ button {
 }
 
 .mini-button {
-    padding-block: 0.1rem;
+    padding-block: 0;
     padding-inline: 0.5rem;
 }
 
