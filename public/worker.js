@@ -131,9 +131,9 @@ addEventListener("fetch", (event) => {
     else if (url.pathname.match(/\.svg$/)) {
         strategy = cacheFirstWithRefresh;
     }
-    else if (url.pathname === "/" && url.search !== "") {
-        url.search = "";
-        request = new Request(url);
+    else if (url.origin === location.origin && url.pathname === "/") {
+        // Protect against any search params and "?" being treated as a separate page.
+        request = new Request(new URL("/", location));
     }
 
     if (logFetches) console.log(`Using ${strategy.name} for ${url}`);
