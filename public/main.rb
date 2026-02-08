@@ -304,7 +304,7 @@ custom_dice_form.addEventListener("submit") do |e|
   next unless custom_dice_input[:validity][:valid] == JS::True
 
   value = custom_dice_input[:value]
-  DiceSelection.add_die(value)
+  DiceSelection.add_dice(value)
 end
 
 # Remove all dice button
