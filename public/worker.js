@@ -6,26 +6,23 @@ const currentCaches = {
     static: `static-${currentCacheVersion}`,
 };
 
+const currentRefreshedUrls = [
+    "/",
+    "/D12.svg",
+    "/dicey.webmanifest",
+    "/main.css",
+    "/main.rb",
+    "/dicey.pack.rb",
+    "/vector_number.pack.rb",
+];
+const currentStaticUrls = [
+    "https://cdn.jsdelivr.net/npm/@ruby/3.4-wasm-wasi@2.7.2/dist/browser.script.iife.js",
+    "https://cdn.jsdelivr.net/npm/@ruby/3.4-wasm-wasi@2.7.2/dist/ruby+stdlib.wasm",
+    "https://fonts.gstatic.com/s/vendsans/v1/E21l_d7ijufNwCJPEUscVA9V.woff2",
+    "https://fonts.gstatic.com/s/zain/v4/sykz-y9lm7soOG7ohS23-w.woff2",
+];
+
 addEventListener("install", (event) => {
-    event.waitUntil(
-        caches.open(currentCaches.refreshed).then((cache) => cache.addAll([
-            "/",
-            "/D12.svg",
-            "/dicey.webmanifest",
-            "/main.css",
-            "/main.rb",
-            "/dicey.pack.rb",
-            "/vector_number.pack.rb",
-        ])
-    ));
-    event.waitUntil(
-        caches.open(currentCaches.static).then((cache) => cache.addAll([
-            "https://cdn.jsdelivr.net/npm/@ruby/3.4-wasm-wasi@2.7.2/dist/browser.script.iife.js",
-            "https://cdn.jsdelivr.net/npm/@ruby/3.4-wasm-wasi@2.7.2/dist/ruby+stdlib.wasm",
-            "https://fonts.gstatic.com/s/vendsans/v1/E21l_d7ijufNwCJPEUscVA9V.woff2",
-            "https://fonts.gstatic.com/s/zain/v4/sykz-y9lm7soOG7ohS23-w.woff2",
-        ])
-    ));
     skipWaiting();
 });
 addEventListener("activate", (event) => {
@@ -42,6 +39,18 @@ addEventListener("activate", (event) => {
                 }),
             ),
         ),
+    );
+    event.waitUntil(
+        async () => {
+            const cache = await caches.open(currentCaches.refreshed);
+            await cache.addAll(currentRefreshedUrls.map((url) => new Request(url, { cache: "no-cache" })));
+        }
+    );
+    event.waitUntil(
+        async () => {
+            const cache = await caches.open(currentCaches.static);
+            await cache.addAll(currentStaticUrls);
+        }
     );
     event.waitUntil(clients.claim());
 });
