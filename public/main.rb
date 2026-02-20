@@ -225,7 +225,7 @@ module RollController
       total = VectorNumber.new(rolls)
       node = roll_output[:children].namedItem("roll-total")
       node[:textContent] = total.to_s do |unit, v, i, op|
-        numeric = VectorNumber.numeric_unit?(unit)
+        numeric = VectorNumber.unit?(unit)
         "#{" " if i > 0}#{v.positive? ? ("+" if i > 0) : "-"}#{" " if i > 0}#{v.abs if numeric || v.abs != 1}#{op unless numeric || v.abs == 1}#{unit}"
       end
       node[:classList].toggle("just-rolled", true)
