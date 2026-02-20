@@ -152,6 +152,17 @@ module DiceListController
   end
 end
 
+module DiceFormatter
+  class << self
+    def format_roll(roll)
+      roll.to_s do |unit, v, i, op|
+        numeric = VectorNumber.unit?(unit)
+        "#{" " if i > 0}#{v.positive? ? ("+" if i > 0) : "-"}#{" " if i > 0}#{v.abs if numeric || v.abs != 1}#{op unless numeric || v.abs == 1}#{unit}"
+      end
+    end
+  end
+end
+
 module RollController
   class << self
     def replace_roll
@@ -224,10 +235,7 @@ module RollController
     def set_total(rolls)
       total = VectorNumber.new(rolls)
       node = roll_output[:children].namedItem("roll-total")
-      node[:textContent] = total.to_s do |unit, v, i, op|
-        numeric = VectorNumber.unit?(unit)
-        "#{" " if i > 0}#{v.positive? ? ("+" if i > 0) : "-"}#{" " if i > 0}#{v.abs if numeric || v.abs != 1}#{op unless numeric || v.abs == 1}#{unit}"
-      end
+      node[:textContent] = DiceFormatter.format_roll(total)
       node[:classList].toggle("just-rolled", true)
       JS.global[:setTimeout].apply(-> { node[:classList].toggle("just-rolled", false) }, 100)
     end
@@ -253,7 +261,7 @@ module DistributionController
       max_percentage = results.values.map(&:last).max
       data = results.map do |outcome, (weight, probability)|
         percentage = (probability * 100).to_f
-        [outcome.to_s, weight.to_s, probability, percentage, percentage / max_percentage]
+        [outcome, weight.to_s, probability, percentage, percentage / max_percentage]
       end
       results_table_body.replaceChildren(*build_table_rows(data))
     end
@@ -268,6 +276,7 @@ module DistributionController
       return [] if data.empty?
 
       data.map do |(outcome, weight, probability, percentage, ratio)|
+        outcome = DiceFormatter.format_roll(outcome)
         probability_string = "#{probability.numerator}​/​#{probability.denominator}"
         RAX.("tr") do
           [

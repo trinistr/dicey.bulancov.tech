@@ -31,7 +31,7 @@ jobs:
         with:
           persist-credentials: false
           repository: "trinistr/dicey"
-          ref: "v0.17.1"
+          ref: "v0.18.0"
           path: "dicey"
       - name: Pack Dicey
         working-directory: ./dicey
