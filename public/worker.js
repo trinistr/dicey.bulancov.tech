@@ -43,7 +43,7 @@ addEventListener("activate", (event) => {
     event.waitUntil(
         async () => {
             const cache = await caches.open(currentCaches.refreshed);
-            await cache.addAll(currentRefreshedUrls.map((url) => new Request(url, { cache: "no-cache" })));
+            await cache.addAll(currentRefreshedUrls);
         }
     );
     event.waitUntil(
