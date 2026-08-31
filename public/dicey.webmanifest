@@ -1,5 +1,7 @@
 {
-    "name": "Dicey",
+    "name": "Dicey on the Web",
+    "short_name": "Dicey",
+    "description": "Dice distribution calculator and roller",
     "id": "/",
     "start_url": "/",
     "display": "standalone",
