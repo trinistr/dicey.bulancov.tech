@@ -216,7 +216,7 @@ module RollController
     end
 
     def build_die_roll(die, roll)
-      RAX.("button", class: "standout-button die-roll-container") do
+      RAX.("button", class: "normal-button die-roll-container") do
         [
           RAX.("div", class: "die-description", "data-die": die) { die },
           RAX.("div", class: "die-roll") { roll }
