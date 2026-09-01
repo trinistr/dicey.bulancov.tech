@@ -53,6 +53,23 @@ module RAX
   end
 end
 
+module DiceFormatter
+  class << self
+    def format_name(die)
+      name = die.to_s
+      name.match(/\A\((.+)\)\z/) { return _1[1] }
+      name
+    end
+
+    def format_roll(roll)
+      roll.to_s do |unit, v, i, op|
+        numeric = VectorNumber.unit?(unit)
+        "#{" " if i > 0}#{v.positive? ? ("+" if i > 0) : "-"}#{" " if i > 0}#{v.abs if numeric || v.abs != 1}#{op unless numeric || v.abs == 1}#{unit}"
+      end
+    end
+  end
+end
+
 module DiceSelection
   FOUNDRY = Dicey::DieFoundry.new
 
@@ -117,6 +134,83 @@ module DiceSelection
   end
 end
 
+module CustomDiceHistory
+  STORAGE_KEY = "dicey.custom-dice-history"
+  MAX_ENTRIES = 8
+
+  class << self
+    def add_entry(definition)
+      definition = definition.to_s
+      history = load_history
+      history.delete(definition)
+      history.unshift(definition)
+      history = history.take(MAX_ENTRIES)
+      save_history(history)
+      render
+    end
+
+    def missing?
+      raw_history.nil?
+    end
+
+    def render
+      history = load_history
+      section = DOCUMENT.getElementById("custom-dice-history")
+
+      if history.empty?
+        section[:hidden] = JS::True
+        return
+      end
+
+      section[:hidden] = JS::False
+      list = DOCUMENT.getElementById("dice-history-list")
+      list.replaceChildren(*history.map { |defn| build_history_item(defn) })
+    end
+
+    private
+
+    def raw_history
+      raw = JS.global[:localStorage].getItem(STORAGE_KEY)
+      raw == JS::Null ? nil : raw.to_s
+    end
+
+    def load_history
+      history = raw_history
+      return [] if history.nil? || history.empty?
+
+      history.split("\n")
+    end
+
+    def save_history(history)
+      JS.global[:localStorage].setItem(STORAGE_KEY, history.join("\n"))
+    end
+
+    def build_history_item(definition)
+      item = RAX.("div", class: "history-dice-item") do
+        [
+          RAX.("button", class: "history-dice-button standout-button") { definition },
+          RAX.("button", class: "remove-button normal-button", "aria-label": "Remove") { "\u00d7" },
+        ]
+      end
+      item.querySelector(".history-dice-button").addEventListener("click") do
+        DiceSelection.add_dice(definition)
+        add_entry(definition)
+      end
+      item.querySelector(".remove-button").addEventListener("click") do
+        remove_entry(definition)
+      end
+      item
+    end
+
+    def remove_entry(definition)
+      history = load_history
+      history.delete(definition)
+      save_history(history)
+      render
+    end
+  end
+end
+
 module DiceListController
   class << self
     def update_list(dice)
@@ -131,7 +225,7 @@ module DiceListController
     end
 
     def build_die_chip(die)
-      name = die.to_s
+      name = DiceFormatter.format_name(die)
       chip =
         RAX.("div", class: "dice-chip", "data-die": name) do
           [
@@ -147,17 +241,6 @@ module DiceListController
       chip.querySelector("button").addEventListener("click") do
         chip.remove
         DiceSelection.remove_die(die)
-      end
-    end
-  end
-end
-
-module DiceFormatter
-  class << self
-    def format_roll(roll)
-      roll.to_s do |unit, v, i, op|
-        numeric = VectorNumber.unit?(unit)
-        "#{" " if i > 0}#{v.positive? ? ("+" if i > 0) : "-"}#{" " if i > 0}#{v.abs if numeric || v.abs != 1}#{op unless numeric || v.abs == 1}#{unit}"
       end
     end
   end
@@ -207,7 +290,7 @@ module RollController
     end
 
     def build_full_roll_nodes(dice)
-      results = dice.map { |die| build_die_roll(die.to_s, die.current) }
+      results = dice.map { |die| build_die_roll(DiceFormatter.format_name(die), die.current) }
       results.each_with_index do |node, index|
         node.addEventListener("click") { reroll_die(index) }
       end
@@ -312,8 +395,11 @@ custom_dice_form.addEventListener("submit") do |e|
   e.preventDefault
   next unless custom_dice_input[:validity][:valid] == JS::True
 
-  value = custom_dice_input[:value]
+  value = custom_dice_input[:value].to_s
+  next if value.empty?
+
   DiceSelection.add_dice(value)
+  CustomDiceHistory.add_entry(value)
 end
 
 # Remove all dice button
@@ -352,11 +438,25 @@ DiceSelection.add_dice(*dice)
 # Set URL updater, must be done after `clear_dice` above
 search_params_updater = ->(dice) {
   chunks = dice.chunk(&:itself)
-  parts = chunks.map { |die, array| array.one? ? die.to_s : "#{die}=#{array.length}"}
+  parts = chunks.map do |die, array|
+    name = DiceFormatter.format_name(die)
+    array.one? ? name : "#{name}=#{array.length}"
+  end
   search_params = parts.any? ? "/?#{parts.join("&")}" : "/"
   WINDOW[:history].replaceState(nil, "", search_params)
 }
 DiceSelection.add_observer(search_params_updater, :call)
+
+# --- Prepopulate custom dice if history is missing
+
+if CustomDiceHistory.missing?
+  # Added in reverse display order
+  CustomDiceHistory.add_entry("1/2,3/2,5/2,7/2")
+  CustomDiceHistory.add_entry("-2..2")
+  CustomDiceHistory.add_entry("❤️,💗,💀")
+  CustomDiceHistory.add_entry("2d6")
+end
+CustomDiceHistory.render
 
 # --- All done, hide loader
 

@@ -168,6 +168,7 @@ button {
     border: none;
     line-height: 1.6;
     font-family: inherit;
+    font-size: inherit;
     cursor: pointer;
 
     &:disabled {
@@ -342,6 +343,21 @@ footer:has(nav) {
 
 /* Main blocks */
 
+/* At least one browser requires SVG styles to be defined at top level. */
+SVG|* {
+    stroke-width: 4px;
+    stroke: var(--primary-dark);
+    fill: var(--primary-light);
+}
+SVG|polyline {
+    fill: none;
+}
+SVG|text {
+    font-family: "Vend Sans", sans-serif;
+    font-size: 30px;
+    text-anchor: middle;
+}
+
 .dice-selection {
     grid-area: dice-selection;
     block-size: min-content;
@@ -427,21 +443,51 @@ footer:has(nav) {
             }
         }
     }
-}
 
-/* At least one browser requires SVG styles to be defined at top level. */
-SVG|* {
-    stroke-width: 4px;
-    stroke: var(--primary-dark);
-    fill: var(--primary-light);
-}
-SVG|polyline {
-    fill: none;
-}
-SVG|text {
-    font-family: "Vend Sans", sans-serif;
-    font-size: 30px;
-    text-anchor: middle;
+    .dice-history {
+        margin-block-start: 1rem;
+
+        h3 {
+            font-size: 0.9rem;
+            margin-block-end: 0.4rem;
+            color: var(--font-color);
+            opacity: 0.7;
+        }
+
+        .dice-history-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+
+            .history-dice-item {
+                position: relative;
+                display: inline-flex;
+                align-items: center;
+
+                .history-dice-button {
+                    block-size: 2.75rem;
+                    border-radius: 2rem;
+                    padding-block: 0.25rem;
+                    padding-inline-start: 1rem;
+                    padding-inline-end: 2.75rem;
+                }
+
+                .remove-button {
+                    position: absolute;
+                    inset-block-start: 50%;
+                    inset-inline-end: 0.4rem;
+                    transform: translateY(-50%);
+                    block-size: 2rem;
+                    inline-size: 2rem;
+                    border-radius: 50%;
+                    padding: 0;
+                    align-items: center;
+                    font-weight: bold;
+                    font-size: 0.75rem;
+                }
+            }
+        }
+    }
 }
 
 .selected-dice {
@@ -465,7 +511,7 @@ SVG|text {
             border-radius: 2rem;
             padding-block: 0.25rem;
             padding-inline: 1rem;
-            display: flex;
+            display: inline-flex;
             gap: 0.5rem;
             align-items: center;
             background: var(--standout-alt-color);
@@ -544,7 +590,7 @@ SVG|text {
 
             .die-description {
                 border-block-end: var(--border-width) solid var(--border-color);
-                padding-inline: 0.25rem;
+                padding-inline: 0.5rem;
                 font-size: 0.5em;
             }
         

@@ -137,6 +137,10 @@
                         <button class="standout-button" id="custom-dice-button">Add</button>
                     </div>
                 </form>
+                <div id="custom-dice-history" class="dice-history">
+                    <h3>Recently used</h3>
+                    <div class="dice-history-list" id="dice-history-list"></div>
+                </div>
             </div>
         </div>
 
@@ -185,7 +189,7 @@
                 <span>Offline/cached data:</span>
                 <span id="offline-data-size">???</span>
             </p>
-            <button class="danger-button mini-button" id="delete-data-button">Clear data</button>
+            <button class="danger-button mini-button" id="delete-data-button">Clear all data</button>
         </footer>
         
         <footer id="footer-third-party" class="surface">
@@ -266,7 +270,7 @@
 
         const deleteButton = document.querySelector("#delete-data-button");
         deleteButton.addEventListener("click", () => {
-            if (confirm("Clear offline data?\n\nThis will delete all cached data this site has saved on your device. The site will no longer work offline and will re-download everything on next visit.\n\nThis will not save space if the site is used again, normally; all cached data is cached for a reason.")) {
+            if (confirm("Clear local and offline data?\n\nThis will delete all data this site has saved on your device. The site will no longer work offline and will re-download everything on next visit.\n\nNormally, this will not save space if the site is used again; all cached data is cached for a reason.")) {
                 navigator.serviceWorker.getRegistrations().then((registrations) => {
                     for (const registration of registrations) {
                         registration.unregister();
@@ -278,6 +282,7 @@
                     }
                     updateOfflineDataSize("???");
                 });
+                localStorage.clear();
             }
         });
 
