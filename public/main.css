@@ -194,7 +194,7 @@ button {
 }
 
 .normal-button {
-    border: var(--border-width) solid var(--border-color);
+    border: var(--border-width) outset var(--border-color);
     border-radius: 1rem;
     padding: 0.8em;
     background: var(--background-color);
@@ -253,6 +253,16 @@ button {
             background: hsl(from var(--danger-color) h s 70%);
         }
     }
+}
+
+.remove-button {
+    block-size: 2rem;
+    inline-size: 2rem;
+    border-radius: 50%;
+    border-style: ridge;
+    padding: 0;
+    align-items: center;
+    font-weight: bold;
 }
 
 .mini-button {
@@ -477,13 +487,6 @@ SVG|text {
                     inset-block-start: 50%;
                     inset-inline-end: 0.4rem;
                     transform: translateY(-50%);
-                    block-size: 2rem;
-                    inline-size: 2rem;
-                    border-radius: 50%;
-                    padding: 0;
-                    align-items: center;
-                    font-weight: bold;
-                    font-size: 0.75rem;
                 }
             }
         }
@@ -519,14 +522,7 @@ SVG|text {
             font-weight: bold;
 
             .remove-button {
-                block-size: 2rem;
-                inline-size: 2rem;
                 margin-inline-end: -0.75rem;
-                border-radius: 50%;
-                padding: 0;
-                align-items: center;
-                font-weight: bold;
-                font-size: 1rem;
             }
         }
     }
@@ -589,7 +585,7 @@ SVG|text {
             font-size: 1.5rem;
 
             .die-description {
-                border-block-end: var(--border-width) solid var(--border-color);
+                border-block-end: var(--border-width) dotted var(--border-color);
                 padding-inline: 0.5rem;
                 font-size: 0.5em;
             }
