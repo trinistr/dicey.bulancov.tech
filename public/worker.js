@@ -41,16 +41,16 @@ addEventListener("activate", (event) => {
         ),
     );
     event.waitUntil(
-        async () => {
+        (async () => {
             const cache = await caches.open(currentCaches.refreshed);
             await cache.addAll(currentRefreshedUrls);
-        }
+        })()
     );
     event.waitUntil(
-        async () => {
+        (async () => {
             const cache = await caches.open(currentCaches.static);
             await cache.addAll(currentStaticUrls);
-        }
+        })()
     );
     event.waitUntil(clients.claim());
 });

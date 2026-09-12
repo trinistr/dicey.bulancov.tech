@@ -1,4 +1,5 @@
 require "observer"
+require "uri"
 
 require "js"
 require "js/require_remote"
@@ -431,6 +432,7 @@ DiceSelection.clear_dice
 params = JS.global[:URLSearchParams].new(WINDOW[:location][:search])
 dice = params.entries.to_a.flat_map do |entry|
   definition, count = entry.to_a.map!(&:to_s)
+  definition = URI.decode_uri_component(definition)
   count == "" ? definition : Array.new(count.to_i, definition)
 end
 DiceSelection.add_dice(*dice)
@@ -439,7 +441,7 @@ DiceSelection.add_dice(*dice)
 search_params_updater = ->(dice) {
   chunks = dice.chunk(&:itself)
   parts = chunks.map do |die, array|
-    name = DiceFormatter.format_name(die)
+    name = URI.encode_uri_component(DiceFormatter.format_name(die))
     array.one? ? name : "#{name}=#{array.length}"
   end
   search_params = parts.any? ? "/?#{parts.join("&")}" : "/"
