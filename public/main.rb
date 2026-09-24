@@ -454,9 +454,9 @@ DiceSelection.add_observer(search_params_updater, :call)
 if CustomDiceHistory.missing?
   # Added in reverse display order
   CustomDiceHistory.add_entry("1/2,3/2,5/2,7/2")
-  CustomDiceHistory.add_entry("-2..2")
+  CustomDiceHistory.add_entry("-1..1")
   CustomDiceHistory.add_entry("❤️,💗,💀")
-  CustomDiceHistory.add_entry("2d6")
+  CustomDiceHistory.add_entry("2d6+5")
 end
 CustomDiceHistory.render
 
