@@ -31,13 +31,16 @@ There are also my awesome CSS, HTML and SVG skills that created the UI.
 ### What's the custom dice syntax?
 
 Informally, following forms are allowed:
-- `N` — a regular die with *N* faces
-- `N..M` — a die with faces from *N* to *M*
+- `N` — a regular die with *N* faces: `6`
+- `N..M` — a die with faces from *N* to *M*: `-1..1`
   - Accepts negative integers
-- `A,B,C,D` — a die with faces *A*, *B*, *C*, *D*
+- `A,B,C,D` — a die with faces *A*, *B*, *C*, *D*: `1a,2b,3c`
   - Accepts fractions in decimal-dotted and vulgar forms: `1.5`, `3/2`
-  - Accepts arbitrary text
-- Any form above can be prefixed with `Nd` to add *N* dice
+  - Accepts (almost) arbitrary text
+- Any form above can be prefixed with `Nd` to add *N* dice: `2d6`
+- Any form above can be suffixed with `+V`/`-V` to add/subtract *V* to each result: `2d6+5`
+  - Accepts integers and fractions
+  - Accepts text if positive
 
 ## Why's this?
 
