@@ -23,11 +23,11 @@ jobs:
           ruby-version: "3.3"
           bundler-cache: true
       - name: Checkout this repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           persist-credentials: false
       - name: Checkout Dicey repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           persist-credentials: false
           repository: "trinistr/dicey"
@@ -39,7 +39,7 @@ jobs:
       - name: Copy packed Dicey to deploy folder
         run: cp dicey/tmp/dicey.pack.rb public/dicey.pack.rb
       - name: Checkout VectorNumber repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           persist-credentials: false
           repository: "trinistr/vector_number"
