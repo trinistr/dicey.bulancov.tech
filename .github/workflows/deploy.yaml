@@ -35,7 +35,7 @@ jobs:
           path: "dicey"
       - name: Pack Dicey
         working-directory: ./dicey
-        run: ../pack_gem
+        run: ../scripts/pack_gem
       - name: Copy packed Dicey to deploy folder
         run: cp dicey/tmp/dicey.pack.rb public/dicey.pack.rb
       - name: Checkout VectorNumber repository
@@ -47,17 +47,17 @@ jobs:
           path: "vector_number"
       - name: Pack VectorNumber
         working-directory: ./vector_number
-        run: ../pack_gem
+        run: ../scripts/pack_gem
       - name: Copy packed VectorNumber to deploy folder
         run: cp vector_number/tmp/vector_number.pack.rb public/vector_number.pack.rb
       - name: Replace favicon
         run: mv D12-production.svg public/D12.svg
       - name: Minify HTML and CSS
-        run: ./minify_html_css
+        run: scripts/minify_html_css
       - name: Setup Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: "public"
   deploy:
@@ -70,7 +70,7 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

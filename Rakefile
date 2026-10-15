@@ -1,27 +1,46 @@
 require "fileutils"
 
-task default: %i[pack_dicey pack_vector_number]
+task default: %i[download_and_pack_gems]
 
-desc "Download and pack dicey gem"
-task pack_dicey: %i[download_dicey] do
-  sh "cd tmp/dicey && ../../pack_gem"
-  sh "cp tmp/dicey/tmp/dicey.pack.rb public/dicey.pack.rb"
-end
-desc "Download dicey gem (depth 1)"
-task :download_dicey do
-  FileUtils.rm_rf "tmp/dicey"
-  FileUtils.mkdir_p "tmp/dicey"
-  sh "git clone --depth 1 https://github.com/trinistr/dicey tmp/dicey"
+REMOTE_GEMS = {
+  "dicey" => "https://github.com/trinistr/dicey",
+  "vector_number" => "https://github.com/trinistr/vector_number",
+}.freeze
+
+LOCAL_GEMS = {
+  "dicey" => "../dicey",
+  "vector_number" => "../vector_number",
+}.freeze
+
+desc "Download and pack dicey and vector_number gems"
+task :download_and_pack_gems do
+  REMOTE_GEMS.keys.each do |gem|
+    Rake::Task[:download_gem].execute(gem_name: gem)
+    Rake::Task[:pack_gem].execute(gem_path: "tmp/#{gem}")
+  end
 end
 
-desc "Download and pack vector_number gem"
-task pack_vector_number: %i[download_vector_number] do
-  sh "cd tmp/vector_number && ../../pack_gem"
-  sh "cp tmp/vector_number/tmp/vector_number.pack.rb public/vector_number.pack.rb"
+desc "Pack dicey and vector_number from sibling directories"
+task :pack_local_gems do
+  LOCAL_GEMS.keys.each do |gem|
+    Rake::Task[:pack_gem].invoke(LOCAL_GEMS[gem])
+  end
 end
-desc "Download vector_number gem (depth 1)"
-task :download_vector_number do
-  FileUtils.rm_rf "tmp/vector_number"
-  FileUtils.mkdir_p "tmp/vector_number"
-  sh "git clone --depth 1 https://github.com/trinistr/vector_number tmp/vector_number"
+
+desc "Download a gem from remote repository to tmp/"
+task :download_gem, [:gem_name] do |_, args|
+  gem = args[:gem_name]
+  raise "Unknown gem: #{gem}" unless REMOTE_GEMS.key?(gem)
+  
+  FileUtils.rm_rf "tmp/#{gem}"
+  FileUtils.mkdir_p "tmp/#{gem}"
+  sh "git clone --depth 1 #{REMOTE_GEMS[gem]} tmp/#{gem}"
+end
+
+desc "Pack a gem from a given path to public/"
+task :pack_gem, [:gem_path] do |_, args|
+  gem_path = args[:gem_path]
+
+  sh "cd #{gem_path} && #{__dir__}/scripts/pack_gem"
+  sh "cp #{gem_path}/tmp/#{File.basename(gem_path)}.pack.rb public/#{File.basename(gem_path)}.pack.rb"
 end
