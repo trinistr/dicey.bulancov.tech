@@ -196,7 +196,7 @@ button {
 .normal-button {
     border: var(--border-width) outset var(--border-color);
     border-radius: 1rem;
-    padding: 0.8em;
+    padding: 0.4em;
     background: var(--background-color);
     color: var(--font-color);
 
