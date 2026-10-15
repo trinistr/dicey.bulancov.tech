@@ -649,10 +649,6 @@ SVG|text {
     }
 
     &:has(tbody:empty) {
-        thead {
-            /* display: none; */
-        }
-
         #empty-results-table {
             display: initial;
         }
