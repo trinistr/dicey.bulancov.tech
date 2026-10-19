@@ -45,8 +45,8 @@
                         <span>D4</span>
                     </button>
                     <button class="dice-button normal-button" data-die="D6" id="die-d6">
-                        <svg viewBox="-10 -10 120 120">
-                            <polygon points="0,20 60,15 100,20 100,90 40,100 0,90" />
+                        <svg viewBox="-10 -10 120 120" id="die-d6-image">
+                            <polygon points="0,20 60,14 100,20 100,90 40,100 0,90" />
                             <polyline points="0,20 40,25 100,20" />
                             <polyline points="40,25 40,100" />
                         </svg>
@@ -96,7 +96,7 @@
                 </div>
             </div>
             <div class="dice-buttons">
-                <h2>Uncommon dice</h2>
+                <h2>More dice</h2>
                 <div class="dice-grid">
                     <button class="dice-button normal-button" data-die="D100" id="die-d100">
                         <svg viewBox="-10 -10 120 120">
@@ -113,15 +113,37 @@
                         </svg>
                         <span>Coin</span>
                     </button>
+                    <button class="dice-button normal-button" data-die="-1..1" id="die-fudge-fate">
+                        <svg viewBox="-10 -10 120 120">
+                            <use href="#die-d6-image" x="-10" y="-10" width="120" height="120" />
+                            <text x="73" y="69" rotate="-10" lengthAdjust="spacingAndGlyphs" textLength="30">−</text>
+                            <text x="19" y="66" rotate="5" lengthAdjust="spacingAndGlyphs" textLength="20">+</text>
+                        </svg>
+                        <span>Fudge</span>
+                    </button>
                     <button class="dice-button normal-button" data-die="👑,♠️,♥️,♣️,♦️,⚓️" id="die-crown-anchor">
                         <svg viewBox="-10 -10 120 120">
-                            <polygon points="0,20 60,15 100,20 100,90 40,100 0,90" />
-                            <polyline points="0,20 40,25 100,20" />
-                            <polyline points="40,25 40,100" />
-                            <text x="70" y="70" rotate="-6" lengthAdjust="spacingAndGlyphs" textLength="30">♥️</text>
-                            <text x="20" y="65" rotate="6" lengthAdjust="spacingAndGlyphs" textLength="20">♠️</text>
+                            <use href="#die-d6-image" x="-10" y="-10" width="120" height="120" />
+                            <text x="73" y="72" rotate="-10" lengthAdjust="spacingAndGlyphs" textLength="30">♥️</text>
+                            <text x="19" y="66" rotate="5" lengthAdjust="spacingAndGlyphs" textLength="20">♠️</text>
                         </svg>
                         <span>👑&⚓️</span>
+                    </button>
+                    <button class="dice-button normal-button" data-die="10,20,30,40,50,60 D6" id="die-d66">
+                        <svg viewBox="-10 -10 120 120">
+                            <g transform="translate(-15, 5)"><use href="#die-d6-image" width="80" height="80" /></g>
+                            <g transform="translate(20, 25)"><use href="#die-d6-image" width="90" height="90" /></g>
+                        </svg>
+                        <span>D66</span>
+                    </button>
+                    <button class="dice-button normal-button" data-die="✅,❌,🤔" id="die-oracle">
+                        <svg viewBox="-10 -10 120 120">
+                            <circle cx="50" cy="50" r="50" />
+                            <text x="65" y="35" font-size="2rem" text-anchor="middle">✅</text>
+                            <text x="20" y="75" font-size="2rem" text-anchor="middle">❌</text>
+                            <text x="65" y="85" font-size="2rem" text-anchor="middle">🤔</text>
+                        </svg>
+                        <span>Oracle</span>
                     </button>
                 </div>
             </div>
@@ -132,7 +154,7 @@
                     <label for="custom-dice-input">Add a custom die:</label>
                     <div class="input-group">
                         <input type="text" placeholder="e.g. 2d3, -4..4, or 2,3,11,2" id="custom-dice-input"
-                            pattern="\s*(?:(?:[1-9]\d*)?[Dd])?(?:[1-9]\d*|\(?-?[1-9]\d*(?:\.\.|\.\.\.|–|—|…)-?[1-9]\d*\)?|\(?-?\d+(?:(?:,-?\d+)+|,)\)?|\(?[^'&quot;,\(\)+−\-]+(?:(?:,[^'&quot;,\(\)+−\-]+)+|,)\)?|\(?[+−\-]\d+(?:[\/.]\d+)?\)?|\(?\+[^'&quot;,\(\)+−\-]+\)?)\s*"
+                            pattern="\s*(?:(?:[1-9]\d*)?[Dd])?(?:[1-9]\d*|\(?-?[1-9]\d*(?:\.\.|\.\.\.|–|—|…)-?[1-9]\d*\)?|\(?-?\d+(?:(?:,-?\d+)+|,)\)?|\(?[^'&quot;,\(\)+−\- ]+(?:(?:,[^'&quot;,\(\)+−\- ]+)+|,)\)?|\(?[+−\-]\d+(?:[\/.]\d+)?\)?|\(?\+[^'&quot;,\(\)+−\- ]+\)?)\s*"
                             enterkeyhint="done" oninput="(e) => e.target.checkValidity()">
                         <button class="standout-button" id="custom-dice-button">Add</button>
                     </div>
