@@ -129,7 +129,7 @@
                         </svg>
                         <span>👑&⚓️</span>
                     </button>
-                    <button class="dice-button normal-button" data-die="10,20,30,40,50,60 D6" id="die-d66">
+                    <button class="dice-button normal-button" data-die="10,20,30,40,50,60|D6" id="die-d66">
                         <svg viewBox="-10 -10 120 120">
                             <g transform="translate(-15, 5)"><use href="#die-d6-image" width="80" height="80" /></g>
                             <g transform="translate(20, 25)"><use href="#die-d6-image" width="90" height="90" /></g>
@@ -154,7 +154,7 @@
                     <label for="custom-dice-input">Add a custom die:</label>
                     <div class="input-group">
                         <input type="text" placeholder="e.g. 2d3, -4..4, or 2,3,11,2" id="custom-dice-input"
-                            pattern="\s*(?:(?:[1-9]\d*)?[Dd])?(?:[1-9]\d*|\(?-?[1-9]\d*(?:\.\.|\.\.\.|–|—|…)-?[1-9]\d*\)?|\(?-?\d+(?:(?:,-?\d+)+|,)\)?|\(?[^'&quot;,\(\)+−\- ]+(?:(?:,[^'&quot;,\(\)+−\- ]+)+|,)\)?|\(?[+−\-]\d+(?:[\/.]\d+)?\)?|\(?\+[^'&quot;,\(\)+−\- ]+\)?)\s*"
+                            pattern="\s*(?:(?:[1-9]\d*)?[Dd])?(?:[1-9]\d*|\(?-?[1-9]\d*(?:\.\.|\.\.\.|–|—|…)-?[1-9]\d*\)?|\(?-?\d+(?:(?:,-?\d+)+|,)\)?|\(?[^'&quot;,\(\)+−\-\|]+(?:(?:,[^'&quot;,\(\)+−\-\|]+)+|,)\)?|\(?[+−\-]\d+(?:[\/.]\d+)?\)?|\(?\+[^'&quot;,\(\)+−\-\|]+\)?)\s*"
                             enterkeyhint="done" oninput="(e) => e.target.checkValidity()">
                         <button class="standout-button" id="custom-dice-button">Add</button>
                     </div>

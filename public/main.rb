@@ -385,7 +385,7 @@ end
 buttons = DOCUMENT.getElementById("dice-selection").querySelectorAll(".dice-button").to_a
 buttons.each do |die_button|
   die_button.addEventListener("click") do |e|
-    DiceSelection.add_dice(*die_button[:dataset][:die].to_s.split(" "))
+    DiceSelection.add_dice(*die_button[:dataset][:die].to_s.split("|"))
   end
 end
 
